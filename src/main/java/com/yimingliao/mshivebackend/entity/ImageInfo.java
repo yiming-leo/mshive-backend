@@ -15,9 +15,9 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImgUrl implements Serializable {
+public class ImageInfo implements Serializable {
     //序列化配置
     private static final long serialVersionUID = 1L;
-    //Tag的类型中文
+    //图片的url
     private String imgUrl;
 }
