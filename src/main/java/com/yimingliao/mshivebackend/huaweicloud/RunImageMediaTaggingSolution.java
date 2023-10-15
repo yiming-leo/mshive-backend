@@ -1,5 +1,6 @@
 package com.yimingliao.mshivebackend.huaweicloud;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.huaweicloud.sdk.core.auth.BasicCredentials;
 import com.huaweicloud.sdk.core.auth.ICredential;
 import com.huaweicloud.sdk.core.exception.ConnectionException;
@@ -8,7 +9,9 @@ import com.huaweicloud.sdk.core.exception.ServiceResponseException;
 import com.huaweicloud.sdk.image.v2.ImageClient;
 import com.huaweicloud.sdk.image.v2.model.*;
 import com.huaweicloud.sdk.image.v2.region.ImageRegion;
+import com.yimingliao.mshivebackend.entity.BoundingBox;
 import com.yimingliao.mshivebackend.entity.TagResult;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -17,20 +20,27 @@ import java.util.List;
 /**
  * @author Calendo
  * @version 1.0
- * @description Huawei AI Function 物体识别并打上标记返回
+ * @description Huawei AI Function 媒资图像识别，贴标签，分类，返回
  * @date 2023/10/14 17:17
  */
 
 @Component
 public class RunImageMediaTaggingSolution {
-    public List<TagResult> ImageMediaTaggingFunction(String imgUrl) {
-        //此处需要输入您的AK/SK信息
-        String ak = "ZSG8S9FUVEGYEWW8ACLI";
-        String sk = "BATI8FwgJVlVr1SdrZ3rWWAfQtDf6BobNKLoIVUV";
+
+    @Value("${constants.huawei-cloud.ak}")
+    private String MY_AK;
+
+    @Value("${constants.huawei-cloud.sk}")
+    private String MY_SK;
+
+    //仅进行分类和标签
+    public List<TagResult> ImageMediaTaggingFunction(
+            String imgUrl, String language,
+            String threshold, Integer limit) throws ConnectionException, RequestTimeoutException, ServiceResponseException {
         //读入AK与SK
         ICredential auth = new BasicCredentials()
-                .withAk(ak)
-                .withSk(sk);
+                .withAk(MY_AK)
+                .withSk(MY_SK);
         //此处替换为您开通服务的区域
         ImageClient client = ImageClient.newBuilder()
                 .withCredential(auth)
@@ -40,50 +50,84 @@ public class RunImageMediaTaggingSolution {
         RunImageMediaTaggingRequest request = new RunImageMediaTaggingRequest();
         //创建Request请求体
         ImageMediaTaggingReq body = new ImageMediaTaggingReq();
-        //置信区间，越大越苛刻
-        body.withThreshold(20f);
-        //zh或者en
-        body.withLanguage("zh");
-        //检测物体数量限制
-        body.withLimit(15);
-        //使用默认Tag
-        body.withUseDefaultTags("true");
-        //载入图片URL
-        body.withUrl(imgUrl);
+        //参数配置
+        body.withThreshold(Float.valueOf(threshold))//置信区间，越大越苛刻
+                .withLanguage(language)//zh或者en
+                .withLimit(limit)//检测物体数量限制
+                .withUseDefaultTags("true")//使用默认Tag
+                .withUrl(imgUrl);//载入图片URL
         //写入请求体
         request.withBody(body);
-        //执行时抛异常
-        try {
-            //创建响应载体并返回
-            RunImageMediaTaggingResponse response = client.runImageMediaTagging(request);
-            //去壳result
-            ImageMediaTaggingResponseResult responseResult = response.getResult();
-            //去壳tags，得到confidence,type,tag,i18nTag,i18nType,instance的List
-            List<ImageMediaTaggingItemBody> responseResultTags = responseResult.getTags();
-            System.out.println(responseResultTags);
-            //转储部分数据到新的对象中
-            List<TagResult> tagResults = new ArrayList<>();
-            for (int i = 0; i < responseResultTags.size(); i++) {
-                TagResult tagResult = new TagResult();
-                ImageMediaTaggingItemBody imageMediaTaggingItem = responseResultTags.get(i);
-                ImageMediaTaggingItemBodyI18nTag i18nTag = imageMediaTaggingItem.getI18nTag();
-                ImageMediaTaggingItemBodyI18nType i18nType = imageMediaTaggingItem.getI18nType();
-                tagResult.setType(i18nType.getZh());
-                tagResult.setTag(i18nTag.getZh());
-                tagResult.setTypeEng(i18nType.getEn());
-                tagResult.setTagEng(i18nTag.getEn());
-                tagResults.add(tagResult);
-            }
-            System.out.println(tagResults);
-            return tagResults;
-        } catch (ConnectionException | RequestTimeoutException e) {
-            e.printStackTrace();
-        } catch (ServiceResponseException e) {
-            e.printStackTrace();
-            System.out.println(e.getHttpStatusCode());
-            System.out.println(e.getErrorCode());
-            System.out.println(e.getErrorMsg());
+        //创建响应载体并返回
+        RunImageMediaTaggingResponse response = client.runImageMediaTagging(request);
+        //去壳result
+        ImageMediaTaggingResponseResult responseResult = response.getResult();
+        //去壳tags，得到confidence,type,tag,i18nTag,i18nType,instance的List
+        List<ImageMediaTaggingItemBody> responseResultTags = responseResult.getTags();
+        System.out.println(responseResultTags);
+        //转储部分数据到新的对象中
+        List<TagResult> tagResults = new ArrayList<>();
+        for (ImageMediaTaggingItemBody responseResultTag : responseResultTags) {
+            TagResult tagResult = new TagResult();
+            String type = responseResultTag.getType();
+            String tag = responseResultTag.getTag();
+            tagResult.setType(type);
+            tagResult.setTag(tag);
+            tagResults.add(tagResult);
         }
-        return null;
+        System.out.println(tagResults);
+        return tagResults;
+    }
+
+    //分类、标签和定位（有Det）
+    public List<TagResult> ImageMediaTaggingDetFunction(
+            String imgUrl, String language,
+            String threshold, Integer limit) throws ConnectionException, RequestTimeoutException, ServiceResponseException {
+        //读入AK与SK
+        ICredential auth = new BasicCredentials()
+                .withAk(MY_AK)
+                .withSk(MY_SK);
+        //此处替换为您开通服务的区域
+        ImageClient client = ImageClient.newBuilder()
+                .withCredential(auth)
+                .withRegion(ImageRegion.valueOf("cn-north-4"))
+                .build();
+        //创建Request请求
+        RunImageMediaTaggingDetRequest request = new RunImageMediaTaggingDetRequest();
+        //创建Request请求体
+        ImageMediaTaggingDetReq body = new ImageMediaTaggingDetReq();
+        //参数配置
+        body.withThreshold(Float.valueOf(threshold))//置信区间，越大越苛刻
+                .withLanguage(language)//zh或者en
+                .withLimit(limit)//检测物体数量限制
+                .withUrl(imgUrl);//载入图片URL
+        //写入请求体
+        request.withBody(body);
+        //创建响应载体并返回
+        RunImageMediaTaggingDetResponse response = client.runImageMediaTaggingDet(request);
+        //去壳result
+        ImageMediaTaggingDetResponseResult responseResult = response.getResult();
+        //去壳tags，得到confidence,type,tag,i18nTag,i18nType,instance的List
+        List<ImageMediaTaggingDetItemBody> responseResultTags = responseResult.getTags();
+        System.out.println(responseResultTags);
+        //转储部分数据到新的对象中
+        List<TagResult> tagResults = new ArrayList<>();
+        for (ImageMediaTaggingDetItemBody responseResultTag : responseResultTags) {
+            TagResult tagResult = new TagResult();
+            List<ImageMediaTaggingDetInstance> instances = responseResultTag.getInstances();
+            for (ImageMediaTaggingDetInstance imageMediaTaggingDetInstance : instances) {
+                //创建boundingBox来把原bean拷贝到新bean内
+                BoundingBox boundingBox = new BoundingBox();
+                BeanUtil.copyProperties(imageMediaTaggingDetInstance.getBoundingBox(), boundingBox);
+                tagResult.setBoundingBox(boundingBox);
+            }
+            String tag = responseResultTag.getTag();
+            String type = responseResultTag.getType();
+            tagResult.setType(type);
+            tagResult.setTag(tag);
+            tagResults.add(tagResult);
+        }
+        System.out.println(tagResults);
+        return tagResults;
     }
 }
