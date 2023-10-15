@@ -11,6 +11,7 @@ import com.huaweicloud.sdk.image.v2.model.*;
 import com.huaweicloud.sdk.image.v2.region.ImageRegion;
 import com.yimingliao.mshivebackend.entity.BoundingBox;
 import com.yimingliao.mshivebackend.entity.TagResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ import java.util.List;
  */
 
 @Component
+@Slf4j
 public class RunImageMediaTaggingSolution {
 
     @Value("${constants.huawei-cloud.ak}")
@@ -64,19 +66,23 @@ public class RunImageMediaTaggingSolution {
         ImageMediaTaggingResponseResult responseResult = response.getResult();
         //去壳tags，得到confidence,type,tag,i18nTag,i18nType,instance的List
         List<ImageMediaTaggingItemBody> responseResultTags = responseResult.getTags();
-        System.out.println(responseResultTags);
-        //转储部分数据到新的对象中
-        List<TagResult> tagResults = new ArrayList<>();
-        for (ImageMediaTaggingItemBody responseResultTag : responseResultTags) {
-            TagResult tagResult = new TagResult();
-            String type = responseResultTag.getType();
-            String tag = responseResultTag.getTag();
-            tagResult.setType(type);
-            tagResult.setTag(tag);
-            tagResults.add(tagResult);
+        //判断是否为空
+        if (responseResultTags != null) {
+            //转储部分数据到新的对象中
+            List<TagResult> tagResults = new ArrayList<>();
+            for (ImageMediaTaggingItemBody responseResultTag : responseResultTags) {
+                TagResult tagResult = new TagResult();
+                String type = responseResultTag.getType();
+                String tag = responseResultTag.getTag();
+                tagResult.setType(type);
+                tagResult.setTag(tag);
+                tagResults.add(tagResult);
+            }
+            log.debug(tagResults.toString());
+            return tagResults;
+        } else {
+            return null;
         }
-        System.out.println(tagResults);
-        return tagResults;
     }
 
     //分类、标签和定位（有Det）
@@ -109,25 +115,30 @@ public class RunImageMediaTaggingSolution {
         ImageMediaTaggingDetResponseResult responseResult = response.getResult();
         //去壳tags，得到confidence,type,tag,i18nTag,i18nType,instance的List
         List<ImageMediaTaggingDetItemBody> responseResultTags = responseResult.getTags();
-        System.out.println(responseResultTags);
-        //转储部分数据到新的对象中
-        List<TagResult> tagResults = new ArrayList<>();
-        for (ImageMediaTaggingDetItemBody responseResultTag : responseResultTags) {
-            TagResult tagResult = new TagResult();
-            List<ImageMediaTaggingDetInstance> instances = responseResultTag.getInstances();
-            for (ImageMediaTaggingDetInstance imageMediaTaggingDetInstance : instances) {
-                //创建boundingBox来把原bean拷贝到新bean内
-                BoundingBox boundingBox = new BoundingBox();
-                BeanUtil.copyProperties(imageMediaTaggingDetInstance.getBoundingBox(), boundingBox);
-                tagResult.setBoundingBox(boundingBox);
+        //判断是否为空
+        if (responseResultTags != null) {
+            //转储部分数据到新的对象中
+            List<TagResult> tagResults = new ArrayList<>();
+            for (ImageMediaTaggingDetItemBody responseResultTag : responseResultTags) {
+                TagResult tagResult = new TagResult();
+                List<ImageMediaTaggingDetInstance> instances = responseResultTag.getInstances();
+                //处理instances里面的det参数
+                for (ImageMediaTaggingDetInstance imageMediaTaggingDetInstance : instances) {
+                    //创建boundingBox来把原bean拷贝到新bean内
+                    BoundingBox boundingBox = new BoundingBox();
+                    BeanUtil.copyProperties(imageMediaTaggingDetInstance.getBoundingBox(), boundingBox);
+                    tagResult.setBoundingBox(boundingBox);
+                }
+                String tag = responseResultTag.getTag();
+                String type = responseResultTag.getType();
+                tagResult.setType(type);
+                tagResult.setTag(tag);
+                tagResults.add(tagResult);
             }
-            String tag = responseResultTag.getTag();
-            String type = responseResultTag.getType();
-            tagResult.setType(type);
-            tagResult.setTag(tag);
-            tagResults.add(tagResult);
+            log.debug(tagResults.toString());
+            return tagResults;
+        } else {
+            return null;
         }
-        System.out.println(tagResults);
-        return tagResults;
     }
 }
