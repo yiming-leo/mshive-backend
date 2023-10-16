@@ -1,5 +1,6 @@
-package com.yimingliao.mshivebackend.entity;
+package com.yimingliao.mshivebackend.entity.image;
 
+import com.yimingliao.mshivebackend.entity.SecretKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,7 @@ public class ImageInfo implements Serializable{
     private String threshold;
     //物体检测数量限制，建议：1.物品检测：15个, 2.家具检测：5个
     private Integer limit;
-    //AI厂商名：huawei, tencent, alibaba, deepl, google, azure, aws
+    //AI厂商名：huawei, tencent, alibaba, deepl, google, azure, aws, imdp, googlemap
     private String serverName;
     //SecretKey
     private SecretKey secretKey;

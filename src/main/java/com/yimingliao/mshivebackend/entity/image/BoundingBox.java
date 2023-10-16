@@ -1,4 +1,4 @@
-package com.yimingliao.mshivebackend.entity;
+package com.yimingliao.mshivebackend.entity.image;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -8,9 +8,9 @@ import com.tencentcloudapi.tiia.v20190529.TiiaClient;
 import com.tencentcloudapi.tiia.v20190529.models.DetectProductRequest;
 import com.tencentcloudapi.tiia.v20190529.models.DetectProductResponse;
 import com.tencentcloudapi.tiia.v20190529.models.Product;
-import com.yimingliao.mshivebackend.entity.BoundingBox;
+import com.yimingliao.mshivebackend.entity.image.BoundingBox;
 import com.yimingliao.mshivebackend.entity.SecretKey;
-import com.yimingliao.mshivebackend.entity.TagResult;
+import com.yimingliao.mshivebackend.entity.image.TagResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -54,7 +54,7 @@ public class DetectProduct {
             //将产品导入tagResult，再将tagResult导入tagResults
             for (Product product : products) {
                 //去除置信度要求以下的数据
-                if (product.getConfidence() <= Long.parseLong(threshold)) {
+                if (product.getConfidence() < Long.parseLong(threshold)) {
                     continue;
                 }
                 //开始装载tagResult

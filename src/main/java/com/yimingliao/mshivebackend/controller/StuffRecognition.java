@@ -5,9 +5,9 @@ import com.huaweicloud.sdk.core.exception.RequestTimeoutException;
 import com.huaweicloud.sdk.core.exception.ServiceResponseException;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.yimingliao.mshivebackend.common.R;
-import com.yimingliao.mshivebackend.entity.ImageInfo;
+import com.yimingliao.mshivebackend.entity.image.ImageInfo;
 import com.yimingliao.mshivebackend.entity.SecretKey;
-import com.yimingliao.mshivebackend.entity.TagResult;
+import com.yimingliao.mshivebackend.entity.image.TagResult;
 import com.yimingliao.mshivebackend.utils.huaweicloud.RunImageMediaTaggingSolution;
 import com.yimingliao.mshivebackend.utils.tencentcloud.DetectProduct;
 import lombok.extern.slf4j.Slf4j;
@@ -73,9 +73,7 @@ public class StuffRecognition {
                     log.error(Arrays.toString(e.getStackTrace()));
                     return R.error(404, e.getMessage(), new Date(), e.getStackTrace());
                 } catch (ServiceResponseException e) {
-                    log.error(String.valueOf(e.getHttpStatusCode()));
-                    log.error(String.valueOf(e.getErrorCode()));
-                    log.error(String.valueOf(e.getErrorMsg()));
+                    log.error(e.getHttpStatusCode() + e.getErrorCode() + e.getErrorMsg());
                     return R.error(e.getHttpStatusCode(), "识别失败", new Date(), e.getErrorMsg());
                 }
             } else {
@@ -92,9 +90,7 @@ public class StuffRecognition {
                     log.error(Arrays.toString(e.getStackTrace()));
                     return R.error(404, e.getMessage(), new Date(), e.getStackTrace());
                 } catch (ServiceResponseException e) {
-                    log.error(String.valueOf(e.getHttpStatusCode()));
-                    log.error(String.valueOf(e.getErrorCode()));
-                    log.error(String.valueOf(e.getErrorMsg()));
+                    log.error(e.getHttpStatusCode() + e.getErrorCode() + e.getErrorMsg());
                     return R.error(e.getHttpStatusCode(), "识别失败", new Date(), e.getErrorMsg());
                 }
             }

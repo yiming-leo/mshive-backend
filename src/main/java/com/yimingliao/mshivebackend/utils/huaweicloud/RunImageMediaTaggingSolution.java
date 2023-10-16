@@ -9,9 +9,9 @@ import com.huaweicloud.sdk.core.exception.ServiceResponseException;
 import com.huaweicloud.sdk.image.v2.ImageClient;
 import com.huaweicloud.sdk.image.v2.model.*;
 import com.huaweicloud.sdk.image.v2.region.ImageRegion;
-import com.yimingliao.mshivebackend.entity.BoundingBox;
+import com.yimingliao.mshivebackend.entity.image.BoundingBox;
 import com.yimingliao.mshivebackend.entity.SecretKey;
-import com.yimingliao.mshivebackend.entity.TagResult;
+import com.yimingliao.mshivebackend.entity.image.TagResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

@@ -2,25 +2,28 @@
 server:
   port: 8081
 constants:
+    server-name: MsHive
 # 应用名称
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: mshivebackend
   # 数据源
   data:
-#   	mongodb:
-#   		# 主机地址
-#   		host: localhost
-#   		# 数据库
-#   		database: yourdatabase
-#   		# 默认端口是27017
-#   		port: 27017
-# 			# 用子账号
-#   		username: test
-# 			# 用子密码
-#   		password: test
-#   		#也可以使用uri连接
-# 		    uri: mongodb://192.168.40.134:27017/articledb
+    mongodb:
+      # 主机地址
+      host: localhost
+      # 数据库
+      database: yourdatabase
+      # 默认端口是27017
+      port: 27017
+      # 用子账号
+      username: test
+      # 用子密码
+      password: test
+      # 也可以使用uri连接
+      #uri: mongodb://192.168.40.134:27017/articledb
   datasource:
     # 数据库驱动：
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -80,8 +83,8 @@ logging:
 #   group:
 #     ebank: com.yimingliao.mshivebackend.controller,com.yimingliao.mshivebackend.service,com.yimingliao.mshivebackend.entity
   level:
-    # root为本机调试时的输出等级
-    root:
+    # root为本机调试时的输出等级，默认info
+    root: debug
     # ebank 为实际生产时的输出等级
     ebank: debug
 #   pattern:
