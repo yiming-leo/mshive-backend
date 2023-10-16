@@ -29,7 +29,7 @@ import java.util.List;
  * @date 2023/10/14 20:30
  */
 @Controller
-@RequestMapping("/ai_recognize")
+@RequestMapping("/ai")
 @Slf4j
 public class StuffRecognition {
 
