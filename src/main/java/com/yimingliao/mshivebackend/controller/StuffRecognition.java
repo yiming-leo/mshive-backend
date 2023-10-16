@@ -6,6 +6,7 @@ import com.huaweicloud.sdk.core.exception.ServiceResponseException;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.ImageInfo;
+import com.yimingliao.mshivebackend.entity.SecretKey;
 import com.yimingliao.mshivebackend.entity.TagResult;
 import com.yimingliao.mshivebackend.utils.huaweicloud.RunImageMediaTaggingSolution;
 import com.yimingliao.mshivebackend.utils.tencentcloud.DetectProduct;
@@ -54,10 +55,13 @@ public class StuffRecognition {
         Integer limit = imageInfo.getLimit();
         //读取图像物体需要调用的云厂商API
         String serverName = imageInfo.getServerName();
+        //读取密钥对
+        SecretKey secretKey = imageInfo.getSecretKey();
+        //判断厂商
         if ("huawei".equals(serverName)) {
             if ("true".equals(needDet)) {
                 try {
-                    List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingDetFunction(imgUrl, language, threshold, limit);
+                    List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingDetFunction(imgUrl, language, threshold, limit, secretKey);
                     if (tagResults == null) {
                         log.info("Huawei ImageMediaTaggingDetFunction Fail");
                         return R.error(404, "识别失败", new Date(), "未检测到物品");
@@ -76,7 +80,7 @@ public class StuffRecognition {
                 }
             } else {
                 try {
-                    List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingFunction(imgUrl, language, threshold, limit);
+                    List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingFunction(imgUrl, language, threshold, limit, secretKey);
                     if (tagResults == null) {
                         log.info("Huawei ImageMediaTaggingFunction Fail");
                         return R.error(404, "识别失败", new Date(), "未检测到物品");
@@ -96,7 +100,7 @@ public class StuffRecognition {
             }
         } else if ("tencent".equals(serverName)) {
             try {
-                List<TagResult> tagResults = detectProduct.detectProductFunction(imgUrl, threshold);
+                List<TagResult> tagResults = detectProduct.detectProductFunction(imgUrl, threshold, secretKey);
                 if (tagResults == null) {
                     log.info("Tencent ImageMediaTaggingFunction Fail");
                     return R.error(404, "识别失败", new Date(), "未检测到物品");

@@ -10,9 +10,9 @@ import com.huaweicloud.sdk.image.v2.ImageClient;
 import com.huaweicloud.sdk.image.v2.model.*;
 import com.huaweicloud.sdk.image.v2.region.ImageRegion;
 import com.yimingliao.mshivebackend.entity.BoundingBox;
+import com.yimingliao.mshivebackend.entity.SecretKey;
 import com.yimingliao.mshivebackend.entity.TagResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -29,20 +29,16 @@ import java.util.List;
 @Slf4j
 public class RunImageMediaTaggingSolution {
 
-    @Value("${constants.huawei-cloud.ak}")
-    private String MY_AK;
-
-    @Value("${constants.huawei-cloud.sk}")
-    private String MY_SK;
-
     //仅进行分类和标签
     public List<TagResult> ImageMediaTaggingFunction(
             String imgUrl, String language,
-            String threshold, Integer limit) throws ConnectionException, RequestTimeoutException, ServiceResponseException {
+            String threshold, Integer limit, SecretKey secretKey) throws ConnectionException, RequestTimeoutException, ServiceResponseException {
         //读入AK与SK
+        String ak = secretKey.getAk();
+        String sk = secretKey.getSk();
         ICredential auth = new BasicCredentials()
-                .withAk(MY_AK)
-                .withSk(MY_SK);
+                .withAk(ak)
+                .withSk(sk);
         //此处替换为您开通服务的区域
         ImageClient client = ImageClient.newBuilder()
                 .withCredential(auth)
@@ -88,11 +84,13 @@ public class RunImageMediaTaggingSolution {
     //分类、标签和定位（有Det）
     public List<TagResult> ImageMediaTaggingDetFunction(
             String imgUrl, String language,
-            String threshold, Integer limit) throws ConnectionException, RequestTimeoutException, ServiceResponseException {
+            String threshold, Integer limit, SecretKey secretKey) throws ConnectionException, RequestTimeoutException, ServiceResponseException {
         //读入AK与SK
+        String ak = secretKey.getAk();
+        String sk = secretKey.getSk();
         ICredential auth = new BasicCredentials()
-                .withAk(MY_AK)
-                .withSk(MY_SK);
+                .withAk(ak)
+                .withSk(sk);
         //此处替换为您开通服务的区域
         ImageClient client = ImageClient.newBuilder()
                 .withCredential(auth)

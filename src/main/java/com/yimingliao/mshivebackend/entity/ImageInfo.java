@@ -30,4 +30,6 @@ public class ImageInfo implements Serializable{
     private Integer limit;
     //AI厂商名：huawei, tencent, alibaba, deepl, google, azure, aws
     private String serverName;
+    //SecretKey
+    private SecretKey secretKey;
 }

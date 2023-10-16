@@ -2,12 +2,6 @@
 server:
   port: 8081
 constants:
-  huawei-cloud:
-    ak: "ZSG8S9FUVEGYEWW8ACLI"
-    sk: "BATI8FwgJVlVr1SdrZ3rWWAfQtDf6BobNKLoIVUV"
-  tencent-cloud:
-    si: "AKIDTuGWgknnlbZWPCwdRCrQPKE7zrjZKD1m"
-    sk: "oXDoLoDXmw0ywqdKwTvIcqFcvAKTbecY"
 # 应用名称
 spring:
   application:
@@ -86,7 +80,9 @@ logging:
 #   group:
 #     ebank: com.yimingliao.mshivebackend.controller,com.yimingliao.mshivebackend.service,com.yimingliao.mshivebackend.entity
   level:
-    root: debug
+    # root为本机调试时的输出等级
+    root:
+    # ebank 为实际生产时的输出等级
     ebank: debug
 #   pattern:
 #     dateformat: MM-dd HH:mm:ss:SSS

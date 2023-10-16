@@ -9,9 +9,9 @@ import com.tencentcloudapi.tiia.v20190529.models.DetectProductRequest;
 import com.tencentcloudapi.tiia.v20190529.models.DetectProductResponse;
 import com.tencentcloudapi.tiia.v20190529.models.Product;
 import com.yimingliao.mshivebackend.entity.BoundingBox;
+import com.yimingliao.mshivebackend.entity.SecretKey;
 import com.yimingliao.mshivebackend.entity.TagResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -27,15 +27,12 @@ import java.util.List;
 @Slf4j
 public class DetectProduct {
 
-    @Value("${constants.tencent-cloud.si}")
-    private String MY_SI;
-
-    @Value("${constants.tencent-cloud.sk}")
-    private String MY_SK;
-
-    public List<TagResult> detectProductFunction(String imgUrl, String threshold) throws TencentCloudSDKException {
+    public List<TagResult> detectProductFunction(String imgUrl, String threshold, SecretKey secretKey) throws TencentCloudSDKException {
         // 密钥可前往官网控制台 https://console.cloud.tencent.com/cam/capi 进行获取
-        Credential cred = new Credential(MY_SI, MY_SK);
+        //读入AK与SK
+        String ak = secretKey.getAk();
+        String sk = secretKey.getSk();
+        Credential cred = new Credential(ak, sk);
         // 选择用户接入服务器终端
         HttpProfile httpProfile = new HttpProfile();
         httpProfile.setEndpoint("tiia.tencentcloudapi.com");
