@@ -5,6 +5,9 @@ constants:
   huawei-cloud:
     ak: "ZSG8S9FUVEGYEWW8ACLI"
     sk: "BATI8FwgJVlVr1SdrZ3rWWAfQtDf6BobNKLoIVUV"
+  tencent-cloud:
+    si: "AKIDTuGWgknnlbZWPCwdRCrQPKE7zrjZKD1m"
+    sk: "oXDoLoDXmw0ywqdKwTvIcqFcvAKTbecY"
 # 应用名称
 spring:
   application:
@@ -78,13 +81,13 @@ mybatis-plus:
     db-config:
       id-type: ASSIGN_ID
 # 输出日志等级
-# logging:
+logging:
 # 	# 分组
 #   group:
 #     ebank: com.yimingliao.mshivebackend.controller,com.yimingliao.mshivebackend.service,com.yimingliao.mshivebackend.entity
-#   level:
-#     root: info
-#     ebank: debug
+  level:
+    root: debug
+    ebank: debug
 #   pattern:
 #     dateformat: MM-dd HH:mm:ss:SSS
 #     rolling-file-name: MshiveServer.%d{yyyy-MM-dd}.%i.log # 滚动日志

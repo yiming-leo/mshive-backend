@@ -1,4 +1,4 @@
-package com.yimingliao.mshivebackend.huaweicloud;
+package com.yimingliao.mshivebackend.utils.huaweicloud;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.huaweicloud.sdk.core.auth.BasicCredentials;

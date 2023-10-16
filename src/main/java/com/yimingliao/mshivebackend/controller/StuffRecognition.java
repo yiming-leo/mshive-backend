@@ -3,10 +3,12 @@ package com.yimingliao.mshivebackend.controller;
 import com.huaweicloud.sdk.core.exception.ConnectionException;
 import com.huaweicloud.sdk.core.exception.RequestTimeoutException;
 import com.huaweicloud.sdk.core.exception.ServiceResponseException;
+import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.ImageInfo;
 import com.yimingliao.mshivebackend.entity.TagResult;
-import com.yimingliao.mshivebackend.huaweicloud.RunImageMediaTaggingSolution;
+import com.yimingliao.mshivebackend.utils.huaweicloud.RunImageMediaTaggingSolution;
+import com.yimingliao.mshivebackend.utils.tencentcloud.DetectProduct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,10 +35,13 @@ public class StuffRecognition {
     @Autowired
     RunImageMediaTaggingSolution runImageMediaTaggingSolution;
 
+    @Autowired
+    DetectProduct detectProduct;
+
     //分类、贴标签或定位
     @PostMapping("/tagging")
-    @ResponseBody//自动序列化，自动传回响应体标识，JSON文件返回不加会404找Bug到死
-    public R imageMediaTagging(@RequestBody ImageInfo imageInfo) {//RB专门针对JSON返回
+    @ResponseBody//自动序列化，自动传回响应体标识，JSON文件返回不加会404找Bug到死，RequestBody针对JSON返回
+    public R imageMediaTagging(@RequestBody ImageInfo imageInfo) {
         //读取图像的url
         String imgUrl = imageInfo.getImgUrl();
         //读取图像是否需要返回坐标
@@ -47,47 +52,65 @@ public class StuffRecognition {
         String threshold = imageInfo.getThreshold();
         //读取图像物体识别数量
         Integer limit = imageInfo.getLimit();
-        if ("true".equals(needDet)) {//需要定位
+        //读取图像物体需要调用的云厂商API
+        String serverName = imageInfo.getServerName();
+        if ("huawei".equals(serverName)) {
+            if ("true".equals(needDet)) {
+                try {
+                    List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingDetFunction(imgUrl, language, threshold, limit);
+                    if (tagResults == null) {
+                        log.info("Huawei ImageMediaTaggingDetFunction Fail");
+                        return R.error(404, "识别失败", new Date(), "未检测到物品");
+                    } else {
+                        log.info("Huawei ImageMediaTaggingDetFunction Success");
+                        return R.success(200, "识别成功", new Date(), tagResults);
+                    }
+                } catch (ConnectionException | RequestTimeoutException e) {
+                    log.error(Arrays.toString(e.getStackTrace()));
+                    return R.error(404, e.getMessage(), new Date(), e.getStackTrace());
+                } catch (ServiceResponseException e) {
+                    log.error(String.valueOf(e.getHttpStatusCode()));
+                    log.error(String.valueOf(e.getErrorCode()));
+                    log.error(String.valueOf(e.getErrorMsg()));
+                    return R.error(e.getHttpStatusCode(), "识别失败", new Date(), e.getErrorMsg());
+                }
+            } else {
+                try {
+                    List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingFunction(imgUrl, language, threshold, limit);
+                    if (tagResults == null) {
+                        log.info("Huawei ImageMediaTaggingFunction Fail");
+                        return R.error(404, "识别失败", new Date(), "未检测到物品");
+                    } else {
+                        log.info("Huawei ImageMediaTaggingFunction Success");
+                        return R.success(200, "识别成功", new Date(), tagResults);
+                    }
+                } catch (ConnectionException | RequestTimeoutException e) {
+                    log.error(Arrays.toString(e.getStackTrace()));
+                    return R.error(404, e.getMessage(), new Date(), e.getStackTrace());
+                } catch (ServiceResponseException e) {
+                    log.error(String.valueOf(e.getHttpStatusCode()));
+                    log.error(String.valueOf(e.getErrorCode()));
+                    log.error(String.valueOf(e.getErrorMsg()));
+                    return R.error(e.getHttpStatusCode(), "识别失败", new Date(), e.getErrorMsg());
+                }
+            }
+        } else if ("tencent".equals(serverName)) {
             try {
-                List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingDetFunction(imgUrl, language, threshold, limit);
-                if (tagResults==null) {
-                    log.info("ImageMediaTaggingDetFunction Fail");
+                List<TagResult> tagResults = detectProduct.detectProductFunction(imgUrl, threshold);
+                if (tagResults == null) {
+                    log.info("Tencent ImageMediaTaggingFunction Fail");
                     return R.error(404, "识别失败", new Date(), "未检测到物品");
                 } else {
-                    log.info("ImageMediaTaggingDetFunction Success");
+                    log.info("Tencent ImageMediaTaggingFunction Success");
                     return R.success(200, "识别成功", new Date(), tagResults);
                 }
-            } catch (ConnectionException | RequestTimeoutException e) {
-                log.error(Arrays.toString(e.getStackTrace()));
-                return R.error(404, e.getMessage(), new Date(), e.getStackTrace());
-            } catch (ServiceResponseException e) {
-                log.error(String.valueOf(e.getHttpStatusCode()));
-                log.error(String.valueOf(e.getErrorCode()));
-                log.error(String.valueOf(e.getErrorMsg()));
-                return R.error(e.getHttpStatusCode(), "识别失败", new Date(), e.getErrorMsg());
+            } catch (TencentCloudSDKException e) {
+                log.error(e.toString());
+                return R.error(400, "识别失败", new Date(), e.getMessage());
             }
-        } else {//不需要定位
-            try {
-                List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingFunction(imgUrl, language, threshold, limit);
-                if (tagResults==null) {
-                    log.info("ImageMediaTaggingFunction Fail");
-                    return R.error(404, "识别失败", new Date(), "未检测到物品");
-                } else {
-                    log.info("ImageMediaTaggingFunction Success");
-                    return R.success(200, "识别成功", new Date(), tagResults);
-                }
-            } catch (ConnectionException | RequestTimeoutException e) {
-                log.error(Arrays.toString(e.getStackTrace()));
-                return R.error(404, e.getMessage(), new Date(), e.getStackTrace());
-            } catch (ServiceResponseException e) {
-                log.error(String.valueOf(e.getHttpStatusCode()));
-                log.error(String.valueOf(e.getErrorCode()));
-                log.error(String.valueOf(e.getErrorMsg()));
-                return R.error(e.getHttpStatusCode(), "识别失败", new Date(), e.getErrorMsg());
-            }
+
         }
-
+        return null;
     }
-
     //人脸识别
 }

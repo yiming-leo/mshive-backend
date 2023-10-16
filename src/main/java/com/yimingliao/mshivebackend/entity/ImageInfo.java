@@ -28,4 +28,6 @@ public class ImageInfo implements Serializable{
     private String threshold;
     //物体检测数量限制，建议：1.物品检测：15个, 2.家具检测：5个
     private Integer limit;
+    //AI厂商名：huawei, tencent, alibaba, deepl, google, azure, aws
+    private String serverName;
 }
