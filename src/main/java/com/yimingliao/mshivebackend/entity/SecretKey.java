@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * @author Calendo
  * @version 1.0
- * @description 密钥
+ * @description 密钥类，是一个存储第三方API的AK和SK的虚拟类
  * @date 2023/10/16 16:00
  */
 @Data

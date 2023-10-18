@@ -12,18 +12,20 @@ spring:
   # 数据源
   data:
     mongodb:
+      authentication-database: admin
+      authSource: admin
       # 主机地址
       host: localhost
       # 数据库
-      database: yourdatabase
+      database: mshive
       # 默认端口是27017
       port: 27017
       # 用子账号
-      username: test
+      username: admin
       # 用子密码
-      password: test
+      password: root
       # 也可以使用uri连接
-      #uri: mongodb://192.168.40.134:27017/articledb
+#       uri: mongodb://192.168.40.134:27017/articledb
   datasource:
     # 数据库驱动：
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -84,7 +86,7 @@ logging:
 #     ebank: com.yimingliao.mshivebackend.controller,com.yimingliao.mshivebackend.service,com.yimingliao.mshivebackend.entity
   level:
     # root为本机调试时的输出等级，默认info
-    root: debug
+    root: info
     # ebank 为实际生产时的输出等级
     ebank: debug
 #   pattern:
