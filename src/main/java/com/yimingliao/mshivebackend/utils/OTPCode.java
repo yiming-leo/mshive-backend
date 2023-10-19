@@ -1,5 +1,7 @@
 package com.yimingliao.mshivebackend.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Random;
 
 /**
@@ -8,6 +10,7 @@ import java.util.Random;
  * @description TODO
  * @date 2023/10/16 19:10
  */
+@Component
 public class OTPCode {
 
     /**

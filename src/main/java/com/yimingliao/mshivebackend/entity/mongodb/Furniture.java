@@ -16,18 +16,15 @@ import java.time.LocalDateTime;
 /**
  * @author Calendo
  * @version 1.0
- * @description MongoDB Room Entity
- * @date 2023/10/17 21:24
+ * @description MongoDB Furniture Entity
+ * @date 2023/10/19 14:53
  */
-
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@Document(collection = "room")
-public class Room implements Serializable {
-
+@Document(collection = "furniture")
+public class Furniture implements Serializable {
     private static final long serialVersionUID = 1L;
 
     //mongodb自动生成的主键，与_id对应
@@ -38,14 +35,14 @@ public class Room implements Serializable {
     //此ID为增量ID，为分页查询使用
     @Indexed
     @AutoIncKey
-    @Field("room_id")
-    private Long roomId = 0L;
+    @Field("furniture_id")
+    private Long furnitureId = 0L;
 
-    //房间名称
+    //家具名称
     @Field("name")
     private String name;
 
-    //房间属性
+    //家具属性
     @Field("attribute")
     private String attribute;
 
@@ -84,4 +81,8 @@ public class Room implements Serializable {
     //用户归属指向
     @Field("ref_user_id")
     private String refUserId;
+
+    //房间归属指向
+    @Field("ref_room_id")
+    private String refRoomId;
 }

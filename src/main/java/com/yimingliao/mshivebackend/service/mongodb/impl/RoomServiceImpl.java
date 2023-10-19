@@ -35,10 +35,9 @@ public class RoomServiceImpl implements IRoomService {
     //Insert One Room
     @Override
     public R insertOneRoom(Room room) {
-        log.info("insert one room received: " + room);
         //保存新增的房间
         Room saveRoom = roomRepository.save(room);
-        log.info("saveRoom: " + room);
+        log.info("insertOneRoom: " + room);
         //判定是否保存成功
         if ("".equals(saveRoom.getId())) {
             return R.error(404, "Failed", new Date());
@@ -49,7 +48,6 @@ public class RoomServiceImpl implements IRoomService {
     //Update One Room
     @Override
     public R updateOneRoom(Room room) {
-        System.out.println(room);
         //新建query
         Query query = new Query();
         //根据uuid查找room，这里where随便是id还是_id都可以，但是前端返回来的JSON必须和后端的Entity类相符合！
@@ -64,7 +62,7 @@ public class RoomServiceImpl implements IRoomService {
                 .set("isBookmarks", room.getIsBookmarks())
                 .set("refUserId", room.getRefUserId());
         //保存新增的房间
-        System.out.println(update);
+        log.info("updateOneRoom: " + update);
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, Room.class);
         long modifiedCount = updateResult.getModifiedCount();
         //判定是否保存成功
@@ -77,16 +75,14 @@ public class RoomServiceImpl implements IRoomService {
     //Delete One User's Room, need roomUUId
     @Override
     public R deleteOneRoomByRoomUUId(String roomUUId) {
-        log.info("find room UUId: " + roomUUId);
         roomRepository.deleteById(roomUUId);
-        log.info("room delete success");
+        log.info("deleteOneRoomByRoomUUId success");
         return R.success(200, "Success", new Date());
     }
 
     //Find One User's Some Rooms, need userUUId, lastSeenRoomId & searchSize
     @Override
     public R searchRoomListByUserUUId(String userUUId, Long lastSeenRoomId, Integer searchSize) {
-        log.info("received Room List Search Conditions: " + userUUId + " " + lastSeenRoomId + " " + searchSize);
         Query query = new Query();
         //define the start ID using addCriteria
         query.addCriteria(Criteria.where("ref_user_id").is(userUUId));
@@ -97,7 +93,7 @@ public class RoomServiceImpl implements IRoomService {
         //Sort sort = Sort.by(order);
         //query.with(Sort.by(Sort.Direction.DESC))
         List<Room> roomList = mongoTemplate.find(query, Room.class);
-        log.info("Room List: " + roomList);
+        log.info("searchRoomListByUserUUId: " + roomList);
         return R.success(200, "Success", new Date(), roomList);
     }
 

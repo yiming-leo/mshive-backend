@@ -2,7 +2,6 @@ package com.yimingliao.mshivebackend.service.mongodb;
 
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.mongodb.Room;
-import org.springframework.data.domain.Pageable;
 
 /**
  * @author Calendo
@@ -22,7 +21,7 @@ public interface IRoomService {
     R deleteOneRoomByRoomUUId(String roomUUId);
 
     //Find One User's Some Rooms, need lastSeenRoomId & searchSize
-    R searchRoomListByUserUUId(String userUUId, Long startId, Integer searchSize);
+    R searchRoomListByUserUUId(String userUUId, Long lastSeenRoomId, Integer searchSize);
 
     //Find One User's All Rooms
     R searchRoomAllByUserUUId(String userUUId);

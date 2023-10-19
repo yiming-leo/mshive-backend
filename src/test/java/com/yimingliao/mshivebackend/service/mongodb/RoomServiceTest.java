@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author Calendo
  * @version 1.0
- * @description TODO
+ * @description Room CRUD 测试类
  * @date 2023/10/17 22:50
  */
 @SpringBootTest
@@ -57,7 +57,6 @@ public class RoomServiceTest {
     @Test
     public void updateRoom() {
         String roomUUId = "6530a5dc4bb3f3606b9a13ef";
-        //ObjectId objectId = new ObjectId(roomUUId);
         Room room = mongoTemplate.findById(roomUUId, Room.class, "room");
         System.out.println("room: " + room);
         if (room == null) {
