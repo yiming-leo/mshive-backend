@@ -11,7 +11,7 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <elasticsearch.version>7.12.1</elasticsearch.version>
+        <elasticsearch.version>7.15.2</elasticsearch.version>
         <spring-boot.version>2.6.13</spring-boot.version>
     </properties>
     <dependencies>
@@ -30,16 +30,16 @@
             <version>3.1.791</version>
         </dependency>
         <!--国密算法-->
-<!--        <dependency>-->
-<!--            <groupId>org.bouncycastle</groupId>-->
-<!--            <artifactId>bcprov-jdk15to18</artifactId>-->
-<!--            <version>1.69</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.bouncycastle</groupId>-->
+        <!--            <artifactId>bcprov-jdk15to18</artifactId>-->
+        <!--            <version>1.69</version>-->
+        <!--        </dependency>-->
         <!--spring-amqp依赖-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-amqp</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-amqp</artifactId>-->
+        <!--        </dependency>-->
         <!--file ops-->
         <dependency>
             <groupId>commons-fileupload</groupId>
@@ -69,6 +69,12 @@
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
         </dependency>
+        <!--springboot-elasticsearch-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+            <version>3.1.4</version>
+        </dependency>
         <!--mongodb依赖 这东西不配置会报错,但不影响运行，因为缺少yml-config-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -90,10 +96,10 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <!--spring security 如果你不想系统400那就先注释掉它-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-security</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-security</artifactId>-->
+        <!--        </dependency>-->
         <!--spring mvc和rest template-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

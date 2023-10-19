@@ -111,7 +111,7 @@ public class RoomServiceImpl implements IRoomService {
 
     //Find One User's One Room
     @Override
-    public R searchOneRoomByUserUUId(String userUUId, String roomId) {
+    public R searchOneRoomByUserUUId(String userUUId, Long roomId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("ref_user_id").is(userUUId));
         query.addCriteria(Criteria.where("room_id").is(roomId));

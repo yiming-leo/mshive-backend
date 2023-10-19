@@ -1,0 +1,67 @@
+package com.yimingliao.mshivebackend.entity.elastic;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+/**
+ * @author Calendo
+ * @version 1.0
+ * @description TODO
+ * @date 2023/10/19 19:55
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@Document(indexName = "stuff", createIndex = true)
+public class ESStuff {
+
+    //ID
+    @Id
+    @Field(type = FieldType.Text)
+    private String id;
+
+    //物品名字
+    @Field(analyzer = "ik_max_word")
+    private String name;
+
+    //物品属性
+    @Field(type = FieldType.Keyword)
+    private String attribute;
+
+    //物品主色
+    @Field(type = FieldType.Text)
+    private String mainColor;
+
+    //物品副色
+    @Field(type = FieldType.Text)
+    private String minorColor;
+
+    //物品图片
+    @Field(type = FieldType.Text)
+    private String imgUrl;
+
+    //物品描述
+    @Field(analyzer = "ik_max_word")
+    private String description;
+
+    //是否标记
+    @Field(type = FieldType.Boolean)
+    private String isBookmarks;
+
+    //修改时间
+    @Field(type = FieldType.Date, format = DateFormat.basic_date)
+    private String modifyTime;
+
+    //修改次数
+    @Field(type = FieldType.Integer)
+    private String modifyCount;
+
+}

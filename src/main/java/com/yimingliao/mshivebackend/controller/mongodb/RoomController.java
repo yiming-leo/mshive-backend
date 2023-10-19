@@ -59,7 +59,7 @@ public class RoomController {
     //Find One User's One Room, need userUUId & roomId
     @GetMapping("/search_one")
     public R searchOneRoomByUserUUId(@RequestParam(name = "userUUId") String userUUId,
-                                     @RequestParam(name = "roomId") String roomId) {
+                                     @RequestParam(name = "roomId") Long roomId) {
         return roomService.searchOneRoomByUserUUId(userUUId, roomId);
     }
 }

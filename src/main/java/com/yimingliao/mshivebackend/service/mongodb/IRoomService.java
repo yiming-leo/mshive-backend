@@ -27,6 +27,6 @@ public interface IRoomService {
     R searchRoomAllByUserUUId(String userUUId);
 
     //Find One User's One Room, need userUUId & roomId
-    R searchOneRoomByUserUUId(String userUUId, String roomId);
+    R searchOneRoomByUserUUId(String userUUId, Long roomId);
 
 }

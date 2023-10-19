@@ -2,15 +2,22 @@
 
 
 ### `/room` Room API
-#### `/add` add new one
-#### `/update` update one by its id
-#### `/delete` delete one by its id
-#### `/find_list` find a list by limit
-#### `/find_one` find one by its id
-#### `/find_all` find all
+#### `/insert_one` add new one
+#### `/updat_onee` update one by its id
+#### `/delete_one` delete one by its id
+#### `/search_list` find a list by limit
+#### `/search_one` find one by its id
+#### `/search_all` find all
+
+### `/furniture` Furniture API
+#### `/insert_one` add new one
+#### `/update_one` update one by its id
+#### `/delete_one` delete one by its id
+#### `/search_list` find a list by limit
+#### `/search_one` find one by its id
+#### `/search_all` find all
 
 ### `/ai` Artificial Intelligence API
-
 #### `/tagging` AI Recognize Stuff
 
 ##### Request
