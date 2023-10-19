@@ -1,4 +1,4 @@
-package com.yimingliao.mshivebackend.controller;
+package com.yimingliao.mshivebackend.controller.other;
 
 import com.huaweicloud.sdk.core.exception.ConnectionException;
 import com.huaweicloud.sdk.core.exception.RequestTimeoutException;

@@ -12,22 +12,22 @@ import org.springframework.data.domain.Pageable;
  */
 public interface IRoomService {
 
-    //Add One Room
-    R addRoom(Room room);
+    //Insert One Room
+    R insertOneRoom(Room room);
 
     //Update One Room
-    R updateRoom(Room room);
+    R updateOneRoom(Room room);
 
     //Delete One User's Room, need roomUUId
-    R deleteRoom(String roomUUId);
+    R deleteOneRoomByRoomUUId(String roomUUId);
 
     //Find One User's Some Rooms, need lastSeenRoomId & searchSize
-    R findRoomList(String userUUId, String startId, Integer searchSize);
+    R searchRoomListByUserUUId(String userUUId, Long startId, Integer searchSize);
 
     //Find One User's All Rooms
-    R findRoomAll(String userUUId);
+    R searchRoomAllByUserUUId(String userUUId);
 
     //Find One User's One Room, need userUUId & roomId
-    R findRoomById(String userUUId, String roomId);
+    R searchOneRoomByUserUUId(String userUUId, String roomId);
 
 }

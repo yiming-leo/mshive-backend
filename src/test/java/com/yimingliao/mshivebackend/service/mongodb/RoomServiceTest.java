@@ -56,13 +56,15 @@ public class RoomServiceTest {
     //UPDATE ROOM
     @Test
     public void updateRoom() {
-        String roomUUId = "652ea5f5dd4b917c52083f6e";
-        Room room = mongoTemplate.findById(roomUUId, Room.class);
+        String roomUUId = "6530a5dc4bb3f3606b9a13ef";
+        //ObjectId objectId = new ObjectId(roomUUId);
+        Room room = mongoTemplate.findById(roomUUId, Room.class, "room");
+        System.out.println("room: " + room);
         if (room == null) {
             System.out.println(R.error(404, "Failed", new Date()));
         } else {
             room.setRefUserId("648fdfbb54b0950d00c37c2f");
-            room.setName("大厨房");
+            room.setName("大厨房大大大");
             room.setAttribute("大厨房");
             room.setDescription("无内容");
             room.setIsBookmarks(true);
@@ -82,7 +84,7 @@ public class RoomServiceTest {
     //Delete One User's Room, need roomUUId
     @Test
     public void deleteRoom() {
-        String roomUUId = "652f5d1df85c172e4c75b54e";
+        String roomUUId = "6530a456f1f6b323f7250f53";
         roomRepository.deleteById(roomUUId);
         System.out.println(R.success(200, "Success", new Date()));
     }
@@ -91,13 +93,14 @@ public class RoomServiceTest {
     @Test
     public void findRoomList() {
         String userUUId = "648fdfbb54b0950d00c37c2e";
-        String lastSeenRoomId = "1000000003";
-        int searchSize = 2;
+        Long lastSeenRoomId = 12L;
+        int searchSize = 3;
         Query query = new Query();
         //define the start ID using addCriteria
         query.addCriteria(Criteria.where("ref_user_id").is(userUUId));
         query.addCriteria(Criteria.where("room_id").gt(lastSeenRoomId));
         query.limit(searchSize);
+        System.out.println(query);
         //Sort
         //Sort sort = Sort.by(order);
         //query.with(Sort.by(Sort.Direction.DESC))
