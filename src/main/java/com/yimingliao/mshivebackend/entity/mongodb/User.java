@@ -1,6 +1,10 @@
 package com.yimingliao.mshivebackend.entity.mongodb;
 
 import com.yimingliao.mshivebackend.config.AutoIncKey;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,6 +20,10 @@ import java.util.Objects;
  * @description MongoDB User Entity
  * @date 2023/10/17 21:24
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Document(collection = "user")
 public class User implements Serializable {
 
@@ -65,7 +73,7 @@ public class User implements Serializable {
 
     //账号修改时间
     @Field("modify_time")
-    private LocalDateTime modifyTime;
+    private String modifyTime;
 
     //上次登录时间，以判断账号是否可删除
     @Field("last_login_time")

@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author Calendo
@@ -75,7 +76,7 @@ public class Room implements Serializable {
 
     //上次修改时间
     @Field("modify_time")
-    private LocalDateTime modifyTime;
+    private String modifyTime;
 
     //是否已删除
     @Field("is_deleted")

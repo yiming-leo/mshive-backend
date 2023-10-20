@@ -35,6 +35,10 @@ public class FurnitureServiceImpl implements IFurnitureService {
     //Insert One Furniture
     @Override
     public R insertOneFurniture(Furniture furniture) {
+        //处理时间：后端插入时间
+        furniture.setModifyTime(new Date().toString());
+        //处理修改次数：新增数据的修改次数为0
+        furniture.setModifyCount(0);
         //保存新增的家具
         Furniture saveFurniture = furnitureRepository.save(furniture);
         log.info("insertOneFurniture: " + furniture);
@@ -60,6 +64,8 @@ public class FurnitureServiceImpl implements IFurnitureService {
                 .set("imgUrl", furniture.getImgUrl())
                 .set("description", furniture.getDescription())
                 .set("isBookmarks", furniture.getIsBookmarks())
+                .set("modifyTime", new Date().toString())//处理时间：后端插入时间
+                .set("modifyCount", furniture.getModifyCount() + 1)//处理修改次数：+1
                 .set("refUserId", furniture.getRefUserId())
                 .set("refRoomId", furniture.getRefRoomId());//多了refRoomId可变基
         //保存新增的房间

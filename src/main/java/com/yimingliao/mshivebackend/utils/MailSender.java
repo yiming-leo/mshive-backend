@@ -27,13 +27,13 @@ public class MailSender {
     public String sendOTPMail(String otp, String from, String to) {
         String text = serverName + ": " + otp + "\n" + "15分钟内有效，请勿将验证码泄露给他人，如非本人操作请忽略。";
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("NO_REPLY_MsHive");
+        simpleMailMessage.setFrom("NO_REPLY" + from);
         simpleMailMessage.setTo(to);
         simpleMailMessage.setSubject("OTP Code");
         simpleMailMessage.setText(text);
         //发送邮件
         javaMailSender.send(simpleMailMessage);
-        log.info("sent to: " + to);
+        log.info("sent email to: " + to);
         return otp;
     }
 

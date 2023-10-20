@@ -53,14 +53,16 @@ public class RoomServiceImpl implements IRoomService {
         //根据uuid查找room，这里where随便是id还是_id都可以，但是前端返回来的JSON必须和后端的Entity类相符合！
         query.addCriteria(Criteria.where("id").is(room.getId()));
         //更新room
-        Update update = new Update().set("name", room.getName())
+        Update update = new Update()
+                .set("name", room.getName())
                 .set("attribute", room.getAttribute())
                 .set("mainColor", room.getMainColor())
                 .set("minorColor", room.getMinorColor())
                 .set("imgUrl", room.getImgUrl())
                 .set("description", room.getDescription())
                 .set("isBookmarks", room.getIsBookmarks())
-                .set("refUserId", room.getRefUserId());
+                .set("refUserId", room.getRefUserId())
+                .set("modifyTime", new Date().toString());
         //保存新增的房间
         log.info("updateOneRoom: " + update);
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, Room.class);

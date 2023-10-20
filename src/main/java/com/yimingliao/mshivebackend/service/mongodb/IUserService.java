@@ -12,16 +12,20 @@ import com.yimingliao.mshivebackend.entity.mongodb.User;
  */
 public interface IUserService {
 
-    R addUser(User user);
+    //-----------用户端操作----------
 
-    R updateUser(User user);
+    R insertOneUser(User user);
 
-    R deleteUser(String userId);
+    R updateOneUser(User user);
 
-    R findUserList(String startId, String endId);
+    R deleteOneUser(String userUUId);
 
-    R findUserAll();
+    R searchOneUserByUserUUId(String userUUId);
 
-    R findUserById(String userId);
+    //-----------管理端操作----------
+
+    //R findUserListByUserUUId(String startId, String endId);
+
+    //R findUserAllIfActiveOrNot(Integer status);
 
 }

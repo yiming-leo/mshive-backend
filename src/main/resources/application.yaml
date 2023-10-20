@@ -62,6 +62,16 @@ spring:
         max-idle: 10
         min-idle: 1
         time-between-eviction-runs: 10s
+  # elasticsearch related
+#   elasticsearch:
+#     username: my-username
+#     password: my-password
+    # es url
+#     uris: http://serverurl:9200
+    # connection timeout, default: 1s
+#     connection-timeout: 10s
+    # data reading timeout, default: 30s
+#     socket-timeout: 30s
 # 下面这些内容是为了让MyBatis映射
 # 指定Mybatis的Mapper文件
 mybatis:

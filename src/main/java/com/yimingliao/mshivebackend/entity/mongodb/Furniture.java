@@ -72,7 +72,7 @@ public class Furniture implements Serializable {
 
     //上次修改时间
     @Field("modify_time")
-    private LocalDateTime modifyTime;
+    private String modifyTime;
 
     //是否已删除
     @Field("is_deleted")

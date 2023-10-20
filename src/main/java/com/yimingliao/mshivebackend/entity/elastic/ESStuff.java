@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 /**
  * @author Calendo
  * @version 1.0
- * @description TODO
+ * @description Elasticsearch对Mongo中Stuff的变本，用于Search Stuff
  * @date 2023/10/19 19:55
  */
 @Data
@@ -29,7 +29,7 @@ public class ESStuff {
     private String id;
 
     //物品名字
-    @Field(analyzer = "ik_max_word")
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String name;
 
     //物品属性
@@ -49,7 +49,7 @@ public class ESStuff {
     private String imgUrl;
 
     //物品描述
-    @Field(analyzer = "ik_max_word")
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String description;
 
     //是否标记
@@ -57,7 +57,7 @@ public class ESStuff {
     private String isBookmarks;
 
     //修改时间
-    @Field(type = FieldType.Date, format = DateFormat.basic_date)
+    @Field(type = FieldType.Text)
     private String modifyTime;
 
     //修改次数
