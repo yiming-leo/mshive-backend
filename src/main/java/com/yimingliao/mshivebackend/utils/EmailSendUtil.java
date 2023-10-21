@@ -15,19 +15,19 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class MailSender {
+public class EmailSendUtil {
 
     @Value("${constants.server-name}")
     private String serverName;
 
-    //需要在yml里加上spring: main: allow-bean-definition-overriding: true
+    //注意包名，不能写成MailSender等
     @Autowired
     private JavaMailSender javaMailSender;
 
     public String sendOTPMail(String otp, String from, String to) {
         String text = serverName + ": " + otp + "\n" + "15分钟内有效，请勿将验证码泄露给他人，如非本人操作请忽略。";
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("NO_REPLY" + from);
+        simpleMailMessage.setFrom(from);
         simpleMailMessage.setTo(to);
         simpleMailMessage.setSubject("OTP Code");
         simpleMailMessage.setText(text);

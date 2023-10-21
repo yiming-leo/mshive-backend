@@ -5,8 +5,8 @@ import com.huaweicloud.sdk.core.exception.RequestTimeoutException;
 import com.huaweicloud.sdk.core.exception.ServiceResponseException;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.yimingliao.mshivebackend.common.R;
-import com.yimingliao.mshivebackend.entity.image.ImageInfo;
 import com.yimingliao.mshivebackend.entity.SecretKey;
+import com.yimingliao.mshivebackend.entity.image.ImageInfo;
 import com.yimingliao.mshivebackend.entity.image.TagResult;
 import com.yimingliao.mshivebackend.utils.huaweicloud.RunImageMediaTaggingSolution;
 import com.yimingliao.mshivebackend.utils.tencentcloud.DetectProduct;
@@ -70,7 +70,7 @@ public class StuffRecognition {
                         return R.success(200, "识别成功", new Date(), tagResults);
                     }
                 } catch (ConnectionException | RequestTimeoutException e) {
-                    log.error(Arrays.toString(e.getStackTrace()));
+                    log.error(e.getMessage(), Arrays.toString(e.getStackTrace()));
                     return R.error(404, e.getMessage(), new Date(), e.getStackTrace());
                 } catch (ServiceResponseException e) {
                     log.error(e.getHttpStatusCode() + e.getErrorCode() + e.getErrorMsg());
@@ -87,7 +87,7 @@ public class StuffRecognition {
                         return R.success(200, "识别成功", new Date(), tagResults);
                     }
                 } catch (ConnectionException | RequestTimeoutException e) {
-                    log.error(Arrays.toString(e.getStackTrace()));
+                    log.error(e.getMessage(), Arrays.toString(e.getStackTrace()));
                     return R.error(404, e.getMessage(), new Date(), e.getStackTrace());
                 } catch (ServiceResponseException e) {
                     log.error(e.getHttpStatusCode() + e.getErrorCode() + e.getErrorMsg());
@@ -105,7 +105,7 @@ public class StuffRecognition {
                     return R.success(200, "识别成功", new Date(), tagResults);
                 }
             } catch (TencentCloudSDKException e) {
-                log.error(e.toString());
+                log.error(e.getErrorCode(), e.getMessage());
                 return R.error(400, "识别失败", new Date(), e.getMessage());
             }
 

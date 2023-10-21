@@ -2,7 +2,7 @@ package com.yimingliao.mshivebackend.service.redis.impl;
 
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.service.redis.IOTPCodeService;
-import com.yimingliao.mshivebackend.utils.MailSender;
+import com.yimingliao.mshivebackend.utils.EmailSendUtil;
 import com.yimingliao.mshivebackend.utils.OTPCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,29 +28,26 @@ public class OTPCodeServiceImpl implements IOTPCodeService {
     private OTPCode otpCode;
 
     @Autowired
-    private MailSender mailSender;
+    private EmailSendUtil emailSendUtil;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public R OTPCodeSenderFromEmail(String userHttpIp, Integer length, Integer duration, String from, String to) {
-        //you can get IP and sth related to browser to generate a list of dashboards in front-end
-        //---------------------------IP SERVICE INJECT-------------------------------
+    public R OTPCodeSenderByEmail(String userHttpIp, Integer length, Integer duration, String from, String to) throws Exception {
         String code = otpCode.generateOTPCode(length);
-        String otpCode = mailSender.sendOTPMail(code, from, to);
+        String otpCode = emailSendUtil.sendOTPMail(code, from, to);
         //inject validate code (key-value pair) to redis set 10min
         //code==otpCode防止被注入
-        if (Objects.equals(code, otpCode)) {
-            redisTemplate.opsForValue().set(userHttpIp, otpCode, duration, TimeUnit.MINUTES);
-            return R.success(200, "Code Sent", new Date());
-        } else {
+        if (!Objects.equals(code, otpCode)) {
             return R.success(404, "Something wrong, try again", new Date());
         }
+        redisTemplate.opsForValue().set(userHttpIp, otpCode, duration, TimeUnit.MINUTES);
+        return R.success(200, "Code Sent", new Date());
     }
 
     @Override
-    public R OTPCodeValidate(String userHttpIp, String userOTP) {
+    public R OTPCodeValidate(String userHttpIp, String userOTP) throws Exception {
         //Insert User IP and Return Value
         String RedisValue = redisTemplate.opsForValue().get(userHttpIp);
         //validate RedisValue & userOTP

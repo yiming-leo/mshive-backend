@@ -10,8 +10,8 @@ import com.yimingliao.mshivebackend.common.R;
  */
 public interface IOTPCodeService {
 
-    R OTPCodeSenderFromEmail(String userHttpIdentity, Integer length, Integer duration, String from, String to);
+    R OTPCodeSenderByEmail(String userHttpIdentity, Integer length, Integer duration, String from, String to) throws Exception;
 
-    R OTPCodeValidate(String userHttpIp, String userOTP);
+    R OTPCodeValidate(String userHttpIp, String userOTP) throws Exception;
 
 }
