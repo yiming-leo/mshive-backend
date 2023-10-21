@@ -12,6 +12,8 @@ public interface IOTPCodeService {
 
     R OTPCodeSenderByEmail(String userHttpIdentity, Integer length, Integer duration, String from, String to) throws Exception;
 
+    R OTPCodeSenderByHtmlEmail(String userHttpIdentity, Integer length, Integer duration, String from, String to, String htmlFilePath) throws Exception;
+
     R OTPCodeValidate(String userHttpIp, String userOTP) throws Exception;
 
 }
