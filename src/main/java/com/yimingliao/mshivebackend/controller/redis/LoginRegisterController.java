@@ -30,12 +30,12 @@ public class LoginRegisterController {
         String from = "2479711422@qq.com";
         Integer length = 6;
         Integer duration = 10;
-        System.out.println("request: " + request);
-        String remoteAddr = request.getRemoteAddr();
-        System.out.println("remoteAddr: " + remoteAddr);
-
+        //String remoteAddr = request.getRemoteAddr();
+        String remoteHost = request.getRemoteHost();
+        int remotePort = request.getRemotePort();
+        log.info("Connect to: " + remoteHost + " " + remotePort);
         try {
-            return otpCodeService.OTPCodeSenderByEmail(remoteAddr, length, duration, from, to);
+            return otpCodeService.OTPCodeSenderByEmail(remoteHost, length, duration, from, to);
         } catch (Exception e) {
             //防止Redis项目没启动所以Try
             log.error(e.getMessage());
