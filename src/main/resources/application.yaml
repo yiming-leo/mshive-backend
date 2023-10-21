@@ -11,7 +11,7 @@ spring:
   data:
     mongodb:
       authentication-database: admin
-#      authSource: admin
+      authSource: admin
       # 主机地址
       host: localhost
       # 数据库
@@ -38,8 +38,8 @@ spring:
   mail:
     host: smtp.qq.com
     protocol: smtps
-    username: 123456789@qq.com
-    password: docmowqbcyzwnwf
+    username: 987654321@qq.com
+    password: ndqpxqduiqpc
     port: 465
     properties:
       mail:
