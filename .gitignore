@@ -6,6 +6,9 @@ target/
 application.yaml
 application.yml
 application.properties
+**/src/main/resources/*.yaml
+**/src/main/resources/*.yml
+**/src/main/resources/*.properties
 
 ### STS ###
 .apt_generated
@@ -34,3 +37,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Log ###
+*.log
