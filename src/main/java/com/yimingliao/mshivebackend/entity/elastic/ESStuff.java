@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -54,7 +53,19 @@ public class ESStuff {
 
     //是否标记
     @Field(type = FieldType.Boolean)
-    private String isBookmarks;
+    private Boolean isBookmarks;
+
+    //指向家具
+    @Field(type = FieldType.Text)
+    private String refFurnitureId;
+
+    //指向房间
+    @Field(type = FieldType.Text)
+    private String refRoomId;
+
+    //指向用户
+    @Field(type = FieldType.Text)
+    private String refUserId;
 
     //修改时间
     @Field(type = FieldType.Text)
@@ -62,6 +73,6 @@ public class ESStuff {
 
     //修改次数
     @Field(type = FieldType.Integer)
-    private String modifyCount;
+    private Integer modifyCount;
 
 }
