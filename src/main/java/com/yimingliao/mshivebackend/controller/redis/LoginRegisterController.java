@@ -58,6 +58,23 @@ public class LoginRegisterController {
         }
     }
 
+    @GetMapping("/otp_send_dynamic_html_email")
+    public R sendOTPCodeByDynamicHtmlEmail(HttpServletRequest request, @RequestParam(name = "emailAddress") String to) {
+        String from = "2479711422@qq.com";
+        String htmlFilePath = "src/main/resources/static/mail_template/otp_send/otp.html";
+        Integer length = 6;
+        Integer duration = 10;
+        String remoteAddr = request.getRemoteAddr();
+        log.info("Connect to: " + remoteAddr);
+        try {
+            return otpCodeService.OTPCodeSenderByDynamicHtmlEmail(remoteAddr, length, duration, from, to, htmlFilePath);
+        } catch (Exception e) {
+            //防止Redis项目没启动所以Try
+            log.error(e.getMessage());
+            return R.error(500, e.getMessage(), new Date());
+        }
+    }
+
     @GetMapping("/otp_validate_email")
     public R validateOTPCodeByEmail(HttpServletRequest request, @RequestParam(name = "otpCode") String otp) {
         String remoteAddr = request.getRemoteAddr();

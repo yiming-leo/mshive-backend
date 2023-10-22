@@ -64,6 +64,21 @@ public class OTPCodeServiceImpl implements IOTPCodeService {
     }
 
     @Override
+    public R OTPCodeSenderByDynamicHtmlEmail(String userHttpIp, Integer length,
+                                      Integer duration, String from, String to, String htmlFilePath)
+            throws MessagingException, IOException {
+        String code = otpCode.generateOTPCode(length);
+        String otpCode = emailSendUtil.sendOTPDynamicHtmlMail(code, duration, from, to, htmlFilePath);
+        //inject validate code (key-value pair) to redis set 10min
+        //code==otpCode防止被注入
+        if (!Objects.equals(code, otpCode)) {
+            return R.success(404, "Something wrong, try again", new Date());
+        }
+        redisTemplate.opsForValue().set(userHttpIp, otpCode, duration, TimeUnit.MINUTES);
+        return R.success(200, "Code Sent", new Date());
+    }
+
+    @Override
     public R OTPCodeValidate(String userHttpIp, String userOTP) throws Exception {
         //Insert User IP and Return Value
         String RedisValue = redisTemplate.opsForValue().get(userHttpIp);

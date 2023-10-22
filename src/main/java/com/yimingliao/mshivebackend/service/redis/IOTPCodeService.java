@@ -14,6 +14,8 @@ public interface IOTPCodeService {
 
     R OTPCodeSenderByHtmlEmail(String userHttpIdentity, Integer length, Integer duration, String from, String to, String htmlFilePath) throws Exception;
 
+    R OTPCodeSenderByDynamicHtmlEmail(String userHttpIdentity, Integer length, Integer duration, String from, String to, String htmlFilePath) throws Exception;
+
     R OTPCodeValidate(String userHttpIp, String userOTP) throws Exception;
 
 }

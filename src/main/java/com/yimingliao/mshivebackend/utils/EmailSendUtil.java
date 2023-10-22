@@ -1,8 +1,12 @@
 package com.yimingliao.mshivebackend.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -47,7 +52,7 @@ public class EmailSendUtil {
     }
 
     public String sendOTPHtmlMail(String otp, Integer duration, String from, String to, String htmlFilePath) throws MessagingException, IOException {
-        //src/main/resources/static/mail_template/otp_send/otp.html
+        //Create Message to Allocate the basic info of Email: form, to, subject
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setFrom(from);
@@ -55,6 +60,27 @@ public class EmailSendUtil {
         mimeMessageHelper.setSubject("OTP Code");
         String htmlContent = new String(Files.readAllBytes(Paths.get(htmlFilePath)));
         mimeMessageHelper.setText(htmlContent, true);
+        javaMailSender.send(mimeMessage);
+        log.info("sent email to: " + to);
+        return otp;
+    }
+
+    public String sendOTPDynamicHtmlMail(String otp, Integer duration, String from, String to, String htmlFilePath) throws MessagingException, IOException {
+        String htmlContent = new String(Files.readAllBytes(Paths.get(htmlFilePath)));
+        Document jsoupDoc = Jsoup.parse(htmlContent);
+        for (Element elementsByClass : jsoupDoc.getElementsByClass("OTP-Code")) {
+            System.out.println(elementsByClass);
+            if (null != elementsByClass) {
+                elementsByClass.text(otp);
+            }
+        }
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setFrom(from);
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setSubject("OTP Code");
+
+        mimeMessageHelper.setText(jsoupDoc.html(), true);
         javaMailSender.send(mimeMessage);
         log.info("sent email to: " + to);
         return otp;
