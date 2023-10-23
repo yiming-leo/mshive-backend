@@ -7,6 +7,9 @@ import com.yimingliao.mshivebackend.service.elastic.IESStuffService;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.query.Criteria;
+import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -25,6 +28,9 @@ public class ESStuffServiceImpl implements IESStuffService {
     @Autowired
     private ESStuffRepository esStuffRepository;
 
+    @Autowired
+    private ElasticsearchRestTemplate elasticsearchRestTemplate;
+
     //SEARCH <ESStuff> BY <Name> OR <Description>, NEED <String Keyword>
     @Override
     public List<ESStuff> searchESStuffByNameOrDescription(String keyword) {
@@ -34,9 +40,42 @@ public class ESStuffServiceImpl implements IESStuffService {
     //SEARCH <ESStuff> BY <String keyword>, intro searching <Name> AND <Description>
     @Override
     public SearchHits searchESStuffSimple(String keyword) {
-        return esStuffRepository.find(keyword);
+        return esStuffRepository.findAndHighlight(keyword);
     }
 
+    //由于ES无法添加自增ID，需要使用search after来进行新增、分页查询，下面为解决方案
+    //https://juejin.cn/post/6947521240416567303
+    @Override
+    public R searchPageESStuffByUserUUId(String userUUId, Long lastSeenStuffId, Integer searchSize) {
+        Criteria criteria = new
+                Criteria("ref_user_id").is(userUUId)
+                .and("stuff_id").greaterThan(lastSeenStuffId)
+                .matches(searchSize);
+
+        CriteriaQuery criteriaQuery = new CriteriaQuery(criteria);
+        log.info("Stuff List ES Search Query: " + criteria);
+
+        org.springframework.data.elasticsearch.core.SearchHits<ESStuff> searchResult =
+                elasticsearchRestTemplate.search(criteriaQuery, ESStuff.class);
+        log.info("searchESStuffListByUserUUId: " + searchResult);
+
+        return R.success(200, "Page Search Success", new Date(), searchResult);
+    }
+
+    @Override
+    public R searchESStuffAllByUserUUId(String userUUId) {
+        Criteria criteria = new Criteria("ref_user_id").is(userUUId);
+        CriteriaQuery criteriaQuery = new CriteriaQuery(criteria);
+        log.info("Stuff List ES Search Query: " + criteria);
+
+        org.springframework.data.elasticsearch.core.SearchHits<ESStuff> searchResult =
+                elasticsearchRestTemplate.search(criteriaQuery, ESStuff.class);
+        log.info("searchESStuffAllByUserUUId: " + searchResult);
+        return R.success(200, "Search All By UserUUId Success", new Date(), searchResult);
+    }
+
+    //由于ES无法添加自增ID，需要使用search after来进行新增、分页查询，下面为解决方案
+    //https://juejin.cn/post/6947521240416567303
     @Override
     public R insertOneESStuff(ESStuff esStuff) {
         esStuff.setModifyCount(1);

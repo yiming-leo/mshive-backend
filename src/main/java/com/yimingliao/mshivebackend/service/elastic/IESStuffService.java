@@ -20,6 +20,11 @@ public interface IESStuffService {
     //SEARCH <ESStuff> BY <String keyword>, intro searching <Name> AND <Description>
     SearchHits searchESStuffSimple(String keyword);
 
+    //PAGE SEARCH <ESStuff> BY <USER UUID>
+    R searchPageESStuffByUserUUId(String userUUId, Long lastSeenStuffId, Integer searchSize);
+
+    R searchESStuffAllByUserUUId(String userUUId);
+
     //INSERT ONE <ESStuff> BY <ESStuff>
     R insertOneESStuff(ESStuff esStuff);
 

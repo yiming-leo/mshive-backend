@@ -1,5 +1,6 @@
 package com.yimingliao.mshivebackend.entity.elastic;
 
+import com.yimingliao.mshivebackend.config.AutoIncKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,57 +23,57 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Document(indexName = "stuff", createIndex = true)
 public class ESStuff {
 
-    //ID
+    //ID，建议用默认随机ID
     @Id
     @Field(type = FieldType.Text)
     private String id;
 
     //物品名字
-    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    @Field(name = "name", type = FieldType.Text, analyzer = "ik_max_word")
     private String name;
 
     //物品属性
-    @Field(type = FieldType.Keyword)
+    @Field(name = "attribute", type = FieldType.Keyword)
     private String attribute;
 
     //物品主色
-    @Field(type = FieldType.Text)
+    @Field(name = "main_color", type = FieldType.Text)
     private String mainColor;
 
     //物品副色
-    @Field(type = FieldType.Text)
+    @Field(name = "minor_color", type = FieldType.Text)
     private String minorColor;
 
     //物品图片
-    @Field(type = FieldType.Text)
+    @Field(name = "img_url", type = FieldType.Text)
     private String imgUrl;
 
     //物品描述
-    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    @Field(name = "description", type = FieldType.Text, analyzer = "ik_max_word")
     private String description;
 
     //是否标记
-    @Field(type = FieldType.Boolean)
+    @Field(name = "is_bookmarks", type = FieldType.Boolean)
     private Boolean isBookmarks;
 
     //指向家具
-    @Field(type = FieldType.Text)
+    @Field(name = "ref_furniture_id", type = FieldType.Text)
     private String refFurnitureId;
 
     //指向房间
-    @Field(type = FieldType.Text)
+    @Field(name = "ref_room_id", type = FieldType.Text)
     private String refRoomId;
 
     //指向用户
-    @Field(type = FieldType.Text)
+    @Field(name = "ref_user_id", type = FieldType.Text)
     private String refUserId;
 
     //修改时间
-    @Field(type = FieldType.Text)
+    @Field(name = "modify_time", type = FieldType.Text)
     private String modifyTime;
 
     //修改次数
-    @Field(type = FieldType.Integer)
+    @Field(name = "modify_count", type = FieldType.Integer)
     private Integer modifyCount;
 
 }

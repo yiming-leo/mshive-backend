@@ -40,6 +40,16 @@ public class ESStuffController {
         return R.success(200, "ES Search Success", new Date(), searchHits);
     }
 
+    @GetMapping("/search_page")
+    public R searchPageESStuffByUserUUId(@RequestParam String userUUId, @RequestParam Long lastSeenStuffId, @RequestParam Integer searchSize) {
+        return esStuffService.searchPageESStuffByUserUUId(userUUId, lastSeenStuffId, searchSize);
+    }
+
+    @GetMapping("/search_user_all")
+    public R searchESStuffAllByUserUUId(@RequestParam String userUUId) {
+        return esStuffService.searchESStuffAllByUserUUId(userUUId);
+    }
+
     @PutMapping("/insert_one")
     public R insertOneESStuff(@RequestBody ESStuff esStuff) {
         return esStuffService.insertOneESStuff(esStuff);

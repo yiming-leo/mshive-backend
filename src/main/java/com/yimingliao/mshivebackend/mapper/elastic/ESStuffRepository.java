@@ -20,6 +20,7 @@ public interface ESStuffRepository extends ElasticsearchRepository<ESStuff, Stri
     //此名称请勿乱修改，因为方法名称和ES的查询语句直接关联！
     //For more info, please check
     //https://docs.spring.io/spring-data/elasticsearch/docs/4.1.2/reference/html/#appendix.query.method.predicate
+    //https://docs.spring.io/spring-data/elasticsearch/docs/current/reference/html/#elasticsearch.repositories
     List<ESStuff> findByNameOrDescription(String name, String description);
 
     @Highlight(fields = {
@@ -27,6 +28,6 @@ public interface ESStuffRepository extends ElasticsearchRepository<ESStuff, Stri
             @HighlightField(name = "description")
     })
     @Query("{\"match\":{\"name\":\"?0\"}}")
-    SearchHits find(String keyword);
+    SearchHits findAndHighlight(String keyword);
 
 }
