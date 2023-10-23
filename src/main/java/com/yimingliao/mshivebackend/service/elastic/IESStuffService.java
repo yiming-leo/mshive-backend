@@ -20,6 +20,12 @@ public interface IESStuffService {
     //SEARCH <ESStuff> BY <String keyword>, intro searching <Name> AND <Description>
     SearchHits searchESStuffSimple(String keyword);
 
-
+    //INSERT ONE <ESStuff> BY <ESStuff>
     R insertOneESStuff(ESStuff esStuff);
+
+    //UPDATE ONE <ESStuff> BY <ESStuff>
+    R updateOneESStuff(ESStuff esStuff);
+
+    //DELETE ONE <ESStuff> BY <ESStuff>
+    R deleteOneESStuff(String esstuffUUId);
 }

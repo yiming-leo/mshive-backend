@@ -42,8 +42,17 @@ public class ESStuffController {
 
     @PutMapping("/insert_one")
     public R insertOneESStuff(@RequestBody ESStuff esStuff) {
-
         return esStuffService.insertOneESStuff(esStuff);
+    }
+
+    @PatchMapping("/update_one")
+    public R updateOneESStuff(@RequestBody ESStuff esStuff) {
+        return esStuffService.updateOneESStuff(esStuff);
+    }
+
+    @DeleteMapping("/delete_one")
+    public R deleteOneESStuff(@RequestParam String esstuffUUId) {
+        return esStuffService.deleteOneESStuff(esstuffUUId);
     }
 
 

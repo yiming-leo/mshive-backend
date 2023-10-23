@@ -45,5 +45,22 @@ public class ESStuffServiceImpl implements IESStuffService {
         return R.success(200, "Insert Success", new Date(), save);
     }
 
+    @Override
+    public R updateOneESStuff(ESStuff esStuff) {
+        esStuff.setModifyCount(esStuff.getModifyCount() + 1);
+        esStuff.setModifyTime(new Date().toString());
+        ESStuff save = esStuffRepository.save(esStuff);
+        if ("".equals(save.getId())) {
+            return R.error(404, "Update Failed", new Date(), esStuff.getId());
+        }
+        return R.success(200, "Update Success", new Date(), esStuff.getId());
+    }
+
+    @Override
+    public R deleteOneESStuff(String esstuffUUId) {
+        esStuffRepository.deleteById(esstuffUUId);
+        return R.success(200, "Delete Success", new Date(), esstuffUUId);
+    }
+
 
 }
