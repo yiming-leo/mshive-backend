@@ -1,4 +1,4 @@
-package com.yimingliao.mshivebackend.controller.mongodb;
+package com.yimingliao.mshivebackend.controller.version1.room;
 
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.mongodb.Room;
@@ -17,7 +17,7 @@ import java.util.Date;
  * @date 2023/10/18 22:12
  */
 @RestController
-@RequestMapping("/room")
+@RequestMapping("/v1/room")
 @Slf4j
 public class RoomController {
 

@@ -1,12 +1,10 @@
-package com.yimingliao.mshivebackend.controller.redis;
+package com.yimingliao.mshivebackend.controller.version1.otp;
 
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.service.redis.impl.OTPCodeServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -19,15 +17,16 @@ import java.util.Date;
  */
 @RestController
 @Slf4j
-public class LoginRegisterController {
+@RequestMapping("/v1/otp")
+public class OTPController {
 
     @Autowired
     private OTPCodeServiceImpl otpCodeService;
 
     //Send OTP Code from email
 
-    @GetMapping("/otp_send_email")
-    public R sendOTPCodeByDynamicHtmlEmail(HttpServletRequest request, @RequestParam(name = "emailAddress") String to) {
+    @GetMapping("/send_email")
+    public R sendOTPCodeByDynamicHtmlEmail(HttpServletRequest request, @RequestParam(name = "email_address") String to) {
         String from = "2479711422@qq.com";
         String htmlFilePath = "src/main/resources/static/mail_template/otp_send/otp.html";
         Integer length = 6;
@@ -43,8 +42,8 @@ public class LoginRegisterController {
         }
     }
 
-    @GetMapping("/otp_validate_email")
-    public R validateOTPCodeByEmail(HttpServletRequest request, @RequestParam(name = "otpCode") String otp) {
+    @GetMapping("/validate_email")
+    public R validateOTPCodeByEmail(HttpServletRequest request, @RequestParam(name = "otp_code") String otp) {
         String remoteAddr = request.getRemoteAddr();
         log.info("Connect to: " + remoteAddr);
         try {

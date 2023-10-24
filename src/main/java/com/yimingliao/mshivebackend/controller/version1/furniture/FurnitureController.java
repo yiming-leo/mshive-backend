@@ -1,4 +1,4 @@
-package com.yimingliao.mshivebackend.controller.mongodb;
+package com.yimingliao.mshivebackend.controller.version1.furniture;
 
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.mongodb.Furniture;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2023/10/18 22:12
  */
 @RestController
-@RequestMapping("/furniture")
+@RequestMapping("/v1/furniture")
 @Slf4j
 public class FurnitureController {
 

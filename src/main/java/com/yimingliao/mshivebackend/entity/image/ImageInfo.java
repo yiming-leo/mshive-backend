@@ -1,6 +1,5 @@
 package com.yimingliao.mshivebackend.entity.image;
 
-import com.yimingliao.mshivebackend.entity.SecretKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +30,4 @@ public class ImageInfo implements Serializable{
     private Integer limit;
     //AI厂商名：huawei, tencent, alibaba, deepl, google, azure, aws, imdp, googlemap
     private String serverName;
-    //SecretKey
-    private SecretKey secretKey;
 }

@@ -1,4 +1,4 @@
-package com.yimingliao.mshivebackend.controller.elastic;
+package com.yimingliao.mshivebackend.controller.version1.stuff;
 
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.elastic.ESStuff;
@@ -20,8 +20,8 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/es_stuff")
-public class ESStuffController {
+@RequestMapping("/v1/stuff")
+public class StuffController {
 
     @Autowired
     private ESStuffServiceImpl esStuffService;

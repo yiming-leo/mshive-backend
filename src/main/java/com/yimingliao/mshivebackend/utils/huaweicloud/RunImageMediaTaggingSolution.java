@@ -32,13 +32,11 @@ public class RunImageMediaTaggingSolution {
     //仅进行分类和标签
     public List<TagResult> ImageMediaTaggingFunction(
             String imgUrl, String language,
-            String threshold, Integer limit, SecretKey secretKey) throws ConnectionException, RequestTimeoutException, ServiceResponseException {
+            String threshold, Integer limit, String serverAk,String serverSk) throws ConnectionException, RequestTimeoutException, ServiceResponseException {
         //读入AK与SK
-        String ak = secretKey.getAk();
-        String sk = secretKey.getSk();
         ICredential auth = new BasicCredentials()
-                .withAk(ak)
-                .withSk(sk);
+                .withAk(serverAk)
+                .withSk(serverSk);
         //此处替换为您开通服务的区域
         ImageClient client = ImageClient.newBuilder()
                 .withCredential(auth)
@@ -84,13 +82,11 @@ public class RunImageMediaTaggingSolution {
     //分类、标签和定位（有Det）
     public List<TagResult> ImageMediaTaggingDetFunction(
             String imgUrl, String language,
-            String threshold, Integer limit, SecretKey secretKey) throws ConnectionException, RequestTimeoutException, ServiceResponseException {
+            String threshold, Integer limit, String serverAk,String serverSk) throws ConnectionException, RequestTimeoutException, ServiceResponseException {
         //读入AK与SK
-        String ak = secretKey.getAk();
-        String sk = secretKey.getSk();
         ICredential auth = new BasicCredentials()
-                .withAk(ak)
-                .withSk(sk);
+                .withAk(serverAk)
+                .withSk(serverSk);
         //此处替换为您开通服务的区域
         ImageClient client = ImageClient.newBuilder()
                 .withCredential(auth)

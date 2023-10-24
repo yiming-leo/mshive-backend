@@ -1,22 +1,19 @@
-package com.yimingliao.mshivebackend.controller.other;
+package com.yimingliao.mshivebackend.controller.version1.ai;
 
 import com.huaweicloud.sdk.core.exception.ConnectionException;
 import com.huaweicloud.sdk.core.exception.RequestTimeoutException;
 import com.huaweicloud.sdk.core.exception.ServiceResponseException;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.yimingliao.mshivebackend.common.R;
-import com.yimingliao.mshivebackend.entity.SecretKey;
 import com.yimingliao.mshivebackend.entity.image.ImageInfo;
 import com.yimingliao.mshivebackend.entity.image.TagResult;
+import com.yimingliao.mshivebackend.service.mongodb.impl.UserServiceImpl;
 import com.yimingliao.mshivebackend.utils.huaweicloud.RunImageMediaTaggingSolution;
 import com.yimingliao.mshivebackend.utils.tencentcloud.DetectProduct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -29,9 +26,9 @@ import java.util.List;
  * @date 2023/10/14 20:30
  */
 @Controller
-@RequestMapping("/ai")
+@RequestMapping("/v1/ai")
 @Slf4j
-public class StuffRecognition {
+public class StuffRecognitionController {
 
     @Autowired
     RunImageMediaTaggingSolution runImageMediaTaggingSolution;
@@ -39,10 +36,21 @@ public class StuffRecognition {
     @Autowired
     DetectProduct detectProduct;
 
+    @Autowired
+    UserServiceImpl userService;
+
     //分类、贴标签或定位
-    @PostMapping("/tagging")
+    @PostMapping("{user_uuid}/tag")
     @ResponseBody//自动序列化，自动传回响应体标识，JSON文件返回不加会404找Bug到死，RequestBody针对JSON返回
-    public R imageMediaTagging(@RequestBody ImageInfo imageInfo) {
+    public R imageMediaTagging(@PathVariable(value = "user_uuid") String userUUId,
+                               @RequestHeader("Server-Access-Key") String serverAk,
+                               @RequestHeader("Server-Secret-Key") String serverSk,
+                               @RequestBody ImageInfo imageInfo) {
+        //查查看是否有这个人的ID注册了，没有就不给使用
+        R r = userService.searchOneUserByUserUUId(userUUId);
+        if (200 != r.getStatus()){
+            return R.error(403, "系统拒绝访问", new Date(), "原因：请求未授权");
+        }
         //读取图像的url
         String imgUrl = imageInfo.getImgUrl();
         //读取图像是否需要返回坐标
@@ -55,13 +63,11 @@ public class StuffRecognition {
         Integer limit = imageInfo.getLimit();
         //读取图像物体需要调用的云厂商API
         String serverName = imageInfo.getServerName();
-        //读取密钥对
-        SecretKey secretKey = imageInfo.getSecretKey();
         //判断厂商
         if ("huawei".equals(serverName)) {
             if ("true".equals(needDet)) {
                 try {
-                    List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingDetFunction(imgUrl, language, threshold, limit, secretKey);
+                    List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingDetFunction(imgUrl, language, threshold, limit, serverAk, serverSk);
                     if (tagResults == null) {
                         log.info("Huawei ImageMediaTaggingDetFunction Fail");
                         return R.error(404, "识别失败", new Date(), "未检测到物品");
@@ -78,7 +84,7 @@ public class StuffRecognition {
                 }
             } else {
                 try {
-                    List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingFunction(imgUrl, language, threshold, limit, secretKey);
+                    List<TagResult> tagResults = runImageMediaTaggingSolution.ImageMediaTaggingFunction(imgUrl, language, threshold, limit, serverAk, serverSk);
                     if (tagResults == null) {
                         log.info("Huawei ImageMediaTaggingFunction Fail");
                         return R.error(404, "识别失败", new Date(), "未检测到物品");
@@ -96,7 +102,7 @@ public class StuffRecognition {
             }
         } else if ("tencent".equals(serverName)) {
             try {
-                List<TagResult> tagResults = detectProduct.detectProductFunction(imgUrl, threshold, secretKey);
+                List<TagResult> tagResults = detectProduct.detectProductFunction(imgUrl, threshold, serverAk, serverSk);
                 if (tagResults == null) {
                     log.info("Tencent ImageMediaTaggingFunction Fail");
                     return R.error(404, "识别失败", new Date(), "未检测到物品");
@@ -112,5 +118,4 @@ public class StuffRecognition {
         }
         return null;
     }
-    //人脸识别
 }

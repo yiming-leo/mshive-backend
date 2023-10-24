@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
 
@@ -39,9 +41,9 @@ public class UserServiceImpl implements IUserService {
         log.info("insertOneUser: " + user);
         //判定是否保存成功
         if ("".equals(saveUser.getId())) {
-            return R.error(404, "Failed", new Date());
+            return R.error(404, "Insert User Failed", new Date());
         }
-        return R.success(200, "Success", new Date());
+        return R.success(200, "Insert User Success", new Date());
     }
 
     //Update One Room
@@ -67,9 +69,9 @@ public class UserServiceImpl implements IUserService {
         long modifiedCount = updateResult.getModifiedCount();
         //判定是否保存成功
         if (updateResult.getModifiedCount() == 0) {
-            return R.error(404, "Update Failed", new Date(), modifiedCount);
+            return R.error(404, "Update User Failed", new Date(), modifiedCount);
         }
-        return R.success(200, "Update Success", new Date(), modifiedCount);
+        return R.success(200, "Update User Success", new Date(), modifiedCount);
     }
 
     //Delete One User, need userUUId
@@ -77,7 +79,7 @@ public class UserServiceImpl implements IUserService {
     public R deleteOneUser(String userUUId) {
         userRepository.deleteById(userUUId);
         log.info("deleteOneFurnitureByUserUUId success");
-        return R.success(200, "Success", new Date());
+        return R.success(200, "User Deleted", new Date());
     }
 
     //Find One User, need userUUId
@@ -87,8 +89,8 @@ public class UserServiceImpl implements IUserService {
         query.addCriteria(Criteria.where("id").is(userUUId));
         User user = mongoTemplate.findOne(query, User.class);
         if (user == null) {
-            return R.error(404, "Failed", new Date());
+            return R.error(404, "Search Failed", new Date());
         }
-        return R.success(200, "Success", new Date(), user);
+        return R.success(200, "Search Success", new Date(), user);
     }
 }
