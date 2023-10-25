@@ -50,6 +50,7 @@ public class SaveEventListener extends AbstractMongoEventListener<Object> {
 
     private Long getNextUserId(String collName) {
         Query query = new Query(Criteria.where("user_id").is(collName));
+
         return getaLong(query);
     }
 
