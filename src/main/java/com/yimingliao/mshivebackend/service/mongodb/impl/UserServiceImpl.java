@@ -12,8 +12,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
 
@@ -36,34 +34,38 @@ public class UserServiceImpl implements IUserService {
     //Insert One User
     @Override
     public R insertOneUser(User user) {
+        user.setIsAdmin(false);
+        user.setIsDeleted(false);
+        user.setAccountStatus("1");
+        user.setLastLoginTime(new Date().toString());
+        user.setModifyTime(new Date().toString());
         //保存新增的用户
-        User saveUser = userRepository.save(user);
         log.info("insertOneUser: " + user);
+        String returnUserUUId = mongoTemplate.save(user).getId();
         //判定是否保存成功
-        if ("".equals(saveUser.getId())) {
+        if (returnUserUUId == null || "".equals(returnUserUUId)) {
             return R.error(404, "Insert User Failed", new Date());
         }
-        return R.success(200, "Insert User Success", new Date());
+        return R.success(200, "Insert User Success", new Date(), returnUserUUId);
     }
 
-    //Update One Room
+    //Update One User
     @Override
     public R updateOneUser(User user) {
         //新建Query
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(user.getId()));
         Update update = new Update()
+                .set("account_status", "1")
                 .set("username", user.getUsername())
                 .set("password", user.getPassword())
                 .set("email", user.getEmail())
-                .set("telephone", user.getTelephone())
-                .set("avatarUrl", user.getAvatarUrl())
-                .set("isAdmin", user.getIsAdmin())
-                .set("accountStatus", user.getAccountStatus())
-                .set("modifyTime", new Date().toString())//处理时间：后端插入时间
-                .set("isDeleted", user.getIsDeleted())
-                .set("lastLoginTime", user.getLastLoginTime());
-        //保存新增的房间
+                .set("avatar_url", user.getAvatarUrl())
+                .set("is_admin", false)
+                .set("is_deleted", false)
+                .set("modify_time", new Date().toString())//处理时间：后端插入时间
+                .set("last_login_time", new Date().toString());
+        //保存修改的用户
         log.info("updateOneUser: " + update);
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, User.class);
         long modifiedCount = updateResult.getModifiedCount();

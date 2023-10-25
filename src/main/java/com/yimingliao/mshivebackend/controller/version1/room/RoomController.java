@@ -3,6 +3,7 @@ package com.yimingliao.mshivebackend.controller.version1.room;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.mongodb.Room;
 import com.yimingliao.mshivebackend.service.mongodb.impl.RoomServiceImpl;
+import com.yimingliao.mshivebackend.service.mongodb.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,9 +25,15 @@ public class RoomController {
     @Autowired
     private RoomServiceImpl roomService;
 
+    @Autowired
+    private UserServiceImpl userService;
+
     //Insert One Room
-    @PutMapping("/insert_one")
-    public R insertOneRoom(@RequestBody Room room) {
+    @PutMapping("/{user_uuid}/insert_one")
+    public R insertOneRoom(@PathVariable("user_uuid") String userUUId, @RequestBody Room room) {
+        if(userService.searchOneUserByUserUUId(userUUId).getStatus() != 200){
+            return R.error(403, "Insert Forbidden", new Date(), "无权限新增");
+        }
         return roomService.insertOneRoom(room);
     }
 
