@@ -31,6 +31,7 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    //-----------------------------------------INSERT---------------------------------------
     //Insert One User
     @Override
     public R insertOneUser(User user) {
@@ -49,6 +50,7 @@ public class UserServiceImpl implements IUserService {
         return R.success(200, "Insert User Success", new Date(), returnUserUUId);
     }
 
+    //-----------------------------------------UPDATE---------------------------------------
     //Update One User
     @Override
     public R updateOneUser(User user) {
@@ -76,6 +78,7 @@ public class UserServiceImpl implements IUserService {
         return R.success(200, "Update User Success", new Date(), modifiedCount);
     }
 
+    //-----------------------------------------DELETE---------------------------------------
     //Delete One User, need userUUId
     @Override
     public R deleteOneUser(String userUUId) {
@@ -84,6 +87,7 @@ public class UserServiceImpl implements IUserService {
         return R.success(200, "User Deleted", new Date());
     }
 
+    //-----------------------------------------SEARCH---------------------------------------
     //Find One User, need userUUId
     @Override
     public R searchOneUserByUserUUId(String userUUId) {

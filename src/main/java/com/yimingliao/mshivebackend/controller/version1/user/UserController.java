@@ -23,11 +23,13 @@ public class UserController {
     @Autowired
     private UserServiceImpl userService;
 
+    //-----------------------------------------INSERT---------------------------------------
     @PutMapping("/insert_one")
     public R insertOneUser(@RequestBody User updateUser) {
         return userService.insertOneUser(updateUser);
     }
 
+    //-----------------------------------------UPDATE---------------------------------------
     @PatchMapping("/{user_uuid}/update_one")
     public R updateOneUser(@PathVariable("user_uuid") String userUUId,
                            @RequestBody User updateUser) {
@@ -37,6 +39,7 @@ public class UserController {
         return userService.updateOneUser(updateUser);
     }
 
+    //-----------------------------------------DELETE---------------------------------------
     @DeleteMapping("/{user_uuid}/delete_one")
     public R deleteOneUser(@PathVariable("user_uuid") String userUUId,
                            @RequestParam("query_user_uuid") String queryUserUUId) {
@@ -46,6 +49,7 @@ public class UserController {
         return userService.deleteOneUser(queryUserUUId);
     }
 
+    //-----------------------------------------SEARCH---------------------------------------
     @GetMapping("/{user_uuid}/search_one")
     public R searchOneUser(@PathVariable("user_uuid") String userUUId,
                            @RequestParam("query_user_uuid") String queryUserUUId) {

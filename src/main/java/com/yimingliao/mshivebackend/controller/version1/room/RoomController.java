@@ -28,6 +28,7 @@ public class RoomController {
     @Autowired
     private UserServiceImpl userService;
 
+    //-----------------------------------------INSERT---------------------------------------
     //Insert One Room
     @PutMapping("/{user_uuid}/insert_one")
     public R insertOneRoom(@PathVariable("user_uuid") String userUUId, @RequestBody Room room) {
@@ -37,18 +38,21 @@ public class RoomController {
         return roomService.insertOneRoom(room);
     }
 
+    //-----------------------------------------UPDATE---------------------------------------
     //Update One Room
     @PatchMapping("/update_one")
     public R updateOneRoom(@RequestBody Room room) {
         return roomService.updateOneRoom(room);
     }
 
+    //-----------------------------------------DELETE---------------------------------------
     //Delete One User's Room, need roomUUId
     @DeleteMapping("/delete_one")
     public R deleteOneRoomByRoomUUId(@RequestParam(name = "roomUUId") String roomUUId) {
         return roomService.deleteOneRoomByRoomUUId(roomUUId);
     }
 
+    //-----------------------------------------SEARCH---------------------------------------
     //Find One User's Some Rooms, need userUUId, lastSeenRoomId & searchSize
     @GetMapping("/search_list")
     public R searchRoomListByUserUUId(@RequestParam(name = "userUUId") String userUUId,
