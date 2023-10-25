@@ -2,6 +2,7 @@ package com.yimingliao.mshivebackend.listener;
 
 import com.yimingliao.mshivebackend.config.AutoIncKey;
 import com.yimingliao.mshivebackend.entity.SeqInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,8 +14,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-
 /**
  * @author Calendo
  * @version 1.0
@@ -23,6 +22,7 @@ import java.lang.reflect.Field;
  */
 
 @Component
+@Slf4j
 public class SaveEventListener extends AbstractMongoEventListener<Object> {
 
     @Autowired
@@ -32,18 +32,15 @@ public class SaveEventListener extends AbstractMongoEventListener<Object> {
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Object> event) {
         Object source = event.getSource();
-        ReflectionUtils.doWithFields(source.getClass(), new ReflectionUtils.FieldCallback() {
-
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                ReflectionUtils.makeAccessible(field);
-                // 如果字段添加了我们自定义的AutoIncKey注解
-                if (field.isAnnotationPresent(AutoIncKey.class)) {
-                    // 设置自增ID
-                    field.set(source, getNextUserId(source.getClass().getSimpleName()));
-                    field.set(source, getNextRoomId(source.getClass().getSimpleName()));
-                    field.set(source, getNextFurnitureId(source.getClass().getSimpleName()));
-                    field.set(source, getNextStuffId(source.getClass().getSimpleName()));
-                }
+        ReflectionUtils.doWithFields(source.getClass(), field -> {
+            ReflectionUtils.makeAccessible(field);
+            // 如果字段添加了我们自定义的AutoIncKey注解
+            if (field.isAnnotationPresent(AutoIncKey.class)) {
+                // 设置自增ID
+                field.set(source, getNextUserId(source.getClass().getSimpleName()));
+                field.set(source, getNextRoomId(source.getClass().getSimpleName()));
+                field.set(source, getNextFurnitureId(source.getClass().getSimpleName()));
+                field.set(source, getNextStuffId(source.getClass().getSimpleName()));
             }
         });
     }
@@ -76,7 +73,7 @@ public class SaveEventListener extends AbstractMongoEventListener<Object> {
         options.upsert(true);
         options.returnNew(true);
         SeqInfo seq = mongoTemplate.findAndModify(query, update, options, SeqInfo.class);
-        System.out.println("seq: " + seq);
+        log.info("Sequence: " + seq);
         return seq.getSeqId();
     }
 

@@ -1,5 +1,6 @@
 package com.yimingliao.mshivebackend.entity.mongodb;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yimingliao.mshivebackend.config.AutoIncKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,45 +45,56 @@ public class Room implements Serializable {
 
     //房间名称
     @Field("name")
+    @JsonProperty("name")
     private String name;
 
     //房间属性
     @Field("attribute")
+    @JsonProperty("attribute")
     private String attribute;
 
     //主颜色
     @Field("main_color")
+    @JsonProperty("main_color")
     private String mainColor;
 
     //副颜色
     @Field("minor_color")
+    @JsonProperty("minor_color")
     private String minorColor;
 
     //图片地址
     @Field("img_url")
+    @JsonProperty("img_url")
     private String imgUrl;
 
     //描述
     @Field("description")
+    @JsonProperty("description")
     private String description;
 
     //标记
     @Field("is_bookmarks")
+    @JsonProperty("is_bookmarks")
     private Boolean isBookmarks;
 
     //修改次数
     @Field("modify_count")
+    @JsonProperty("modify_count")
     private Integer modifyCount;
 
     //上次修改时间
     @Field("modify_time")
+    @JsonProperty("modify_time")
     private String modifyTime;
 
     //是否已删除
     @Field("is_deleted")
+    @JsonProperty("is_deleted")
     private Boolean isDeleted;
 
     //用户归属指向
     @Field("ref_user_id")
+    @JsonProperty("ref_user_id")
     private String refUserId;
 }
