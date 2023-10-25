@@ -35,6 +35,9 @@ public class RoomServiceImpl implements IRoomService {
     //Insert One Room
     @Override
     public R insertOneRoom(Room room) {
+        room.setModifyCount(1);
+        room.setModifyTime(new Date().toString());
+        room.setIsDeleted(false);
         //保存新增的房间
         Room saveRoom = roomRepository.save(room);
         log.info("insertOneRoom: " + room);
