@@ -32,6 +32,7 @@ public class RoomServiceImpl implements IRoomService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    //----------------------------------INSERT----------------------------------
     //Insert One Room
     @Override
     public R insertOneRoom(Room room) {
@@ -43,11 +44,12 @@ public class RoomServiceImpl implements IRoomService {
         log.info("insertOneRoom: " + room);
         //判定是否保存成功
         if ("".equals(saveRoom.getId())) {
-            return R.error(404, "Failed", new Date());
+            return R.error(404, "Insert Failed", new Date());
         }
-        return R.success(200, "Success", new Date());
+        return R.success(200, "Insert Success", new Date(), saveRoom.getId());
     }
 
+    //----------------------------------UPDATE----------------------------------
     //Update One Room
     @Override
     public R updateOneRoom(Room room) {
@@ -59,32 +61,36 @@ public class RoomServiceImpl implements IRoomService {
         Update update = new Update()
                 .set("name", room.getName())
                 .set("attribute", room.getAttribute())
-                .set("mainColor", room.getMainColor())
-                .set("minorColor", room.getMinorColor())
-                .set("imgUrl", room.getImgUrl())
+                .set("main_color", room.getMainColor())
+                .set("minor_color", room.getMinorColor())
+                .set("img_url", room.getImgUrl())
                 .set("description", room.getDescription())
-                .set("isBookmarks", room.getIsBookmarks())
-                .set("refUserId", room.getRefUserId())
-                .set("modifyTime", new Date().toString());
+                .set("is_bookmarks", room.getIsBookmarks())
+                .set("ref_user_id", room.getRefUserId())
+                .set("modify_time", new Date().toString())
+                .set("modify_count", room.getModifyCount() + 1)
+                .set("is_deleted", false);
         //保存新增的房间
         log.info("updateOneRoom: " + update);
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, Room.class);
         long modifiedCount = updateResult.getModifiedCount();
         //判定是否保存成功
         if (updateResult.getModifiedCount() == 0) {
-            return R.error(404, "Update Failed", new Date(), modifiedCount);
+            return R.error(404, "Update Failed", new Date(), room.getId());
         }
-        return R.success(200, "Update Success", new Date(), modifiedCount);
+        return R.success(200, "Update Success", new Date(), room.getId());
     }
 
+    //----------------------------------DELETE----------------------------------
     //Delete One User's Room, need roomUUId
     @Override
     public R deleteOneRoomByRoomUUId(String roomUUId) {
         roomRepository.deleteById(roomUUId);
-        log.info("deleteOneRoomByRoomUUId success");
-        return R.success(200, "Success", new Date());
+        log.info("deleteOneRoomByRoomUUId success: " + roomUUId);
+        return R.success(200, "Delete Success", new Date(), roomUUId);
     }
 
+    //----------------------------------SEARCH----------------------------------
     //Find One User's Some Rooms, need userUUId, lastSeenRoomId & searchSize
     @Override
     public R searchRoomListByUserUUId(String userUUId, Long lastSeenRoomId, Integer searchSize) {
