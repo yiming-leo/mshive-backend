@@ -49,22 +49,22 @@ public class UserServiceImpl implements IUserService {
         return R.success(200, "Insert User Success", new Date(), returnUserUUId);
     }
 
-    //Update One Room
+    //Update One User
     @Override
     public R updateOneUser(User user) {
         //新建Query
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(user.getId()));
         Update update = new Update()
+                .set("account_status", "1")
                 .set("username", user.getUsername())
                 .set("password", user.getPassword())
                 .set("email", user.getEmail())
-                .set("avatarUrl", user.getAvatarUrl())
-                .set("isAdmin", user.getIsAdmin())
-                .set("accountStatus", user.getAccountStatus())
-                .set("modifyTime", new Date().toString())//处理时间：后端插入时间
-                .set("isDeleted", user.getIsDeleted())
-                .set("lastLoginTime", user.getLastLoginTime());
+                .set("avatar_url", user.getAvatarUrl())
+                .set("is_admin", false)
+                .set("is_deleted", false)
+                .set("modify_time", new Date().toString())//处理时间：后端插入时间
+                .set("last_login_time", new Date().toString());
         //保存修改的用户
         log.info("updateOneUser: " + update);
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, User.class);

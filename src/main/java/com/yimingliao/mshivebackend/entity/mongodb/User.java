@@ -32,11 +32,10 @@ public class User implements Serializable {
     @Id
     private String id;
 
-    //增量ID，加快索引
+    //增量ID，加快索引，由于此处为监听器自增，因此无法设置@JsonProperty类型转换
     @Indexed
     @AutoIncKey
     @Field("user_id")
-    @JsonProperty("user_id")
     private Long userId = 0L;
 
     //账户状态：“1”:在用/”2”:封禁/”0”:注销

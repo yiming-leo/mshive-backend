@@ -29,7 +29,8 @@ public class UserController {
     }
 
     @PatchMapping("/{user_uuid}/update_one")
-    public R updateOneUser(@PathVariable("user_uuid") String userUUId, @RequestBody User updateUser) {
+    public R updateOneUser(@PathVariable("user_uuid") String userUUId,
+                           @RequestBody User updateUser) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Update Forbidden", new Date(), "无权限修改");
         }
@@ -37,7 +38,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{user_uuid}/delete_one")
-    public R deleteOneUser(@PathVariable("user_uuid") String userUUId, @RequestParam("query_user_uuid") String queryUserUUId) {
+    public R deleteOneUser(@PathVariable("user_uuid") String userUUId,
+                           @RequestParam("query_user_uuid") String queryUserUUId) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Delete Forbidden", new Date(), "无权限删除");
         }
@@ -45,7 +47,8 @@ public class UserController {
     }
 
     @GetMapping("/{user_uuid}/search_one")
-    public R searchOneUser(@PathVariable("user_uuid") String userUUId, @RequestParam("query_user_uuid") String queryUserUUId) {
+    public R searchOneUser(@PathVariable("user_uuid") String userUUId,
+                           @RequestParam("query_user_uuid") String queryUserUUId) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Search Forbidden", new Date(), "无权限查找");
         }
