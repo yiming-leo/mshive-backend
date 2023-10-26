@@ -2,6 +2,7 @@ package com.yimingliao.mshivebackend.service.mongodb.impl;
 
 import com.mongodb.client.result.UpdateResult;
 import com.yimingliao.mshivebackend.common.R;
+import com.yimingliao.mshivebackend.dto.RoomScrollListDTO;
 import com.yimingliao.mshivebackend.entity.mongodb.Room;
 import com.yimingliao.mshivebackend.mapper.mongodb.RoomRepository;
 import com.yimingliao.mshivebackend.service.mongodb.IRoomService;
@@ -98,8 +99,13 @@ public class RoomServiceImpl implements IRoomService {
         //Sort sort = Sort.by(order);
         //query.with(Sort.by(Sort.Direction.DESC))
         List<Room> roomList = mongoTemplate.find(query, Room.class);
-        log.info("searchRoomListByUserUUId: " + roomList);
-        return R.success(200, "Success", new Date(), roomList);
+        //装载到RoomScrollListDTO内
+        RoomScrollListDTO roomScrollListDTO = new RoomScrollListDTO();
+        roomScrollListDTO.setLastSeenRoomId(lastSeenRoomId);
+        roomScrollListDTO.setRoomList(roomList);
+        roomScrollListDTO.setSearchSize(searchSize);
+        log.info("searchRoomListByUserUUId: " + roomScrollListDTO);
+        return R.success(200, "Search Success", new Date(), roomScrollListDTO);
     }
 
     //Find One User's All Rooms
@@ -109,9 +115,9 @@ public class RoomServiceImpl implements IRoomService {
         query.addCriteria(Criteria.where("ref_user_id").is(userUUId));
         List<Room> roomList = mongoTemplate.find(query, Room.class);
         if (roomList.isEmpty()) {
-            return R.error(404, "Failed", new Date());
+            return R.error(404, "Search Failed", new Date(), "No Massage Matched");
         }
-        return R.success(200, "Success", new Date(), roomList);
+        return R.success(200, "Search Success", new Date(), roomList);
     }
 
     //Find One User's One Room
@@ -122,8 +128,8 @@ public class RoomServiceImpl implements IRoomService {
         query.addCriteria(Criteria.where("room_id").is(roomId));
         List<Room> roomList = mongoTemplate.find(query, Room.class);
         if (roomList.isEmpty()) {
-            return R.error(404, "Failed", new Date());
+            return R.error(404, "Search Failed", new Date());
         }
-        return R.success(200, "Success", new Date(), roomList);
+        return R.success(200, "Search Success", new Date(), roomList);
     }
 }
