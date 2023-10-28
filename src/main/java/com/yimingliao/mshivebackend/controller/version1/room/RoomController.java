@@ -6,9 +6,10 @@ import com.yimingliao.mshivebackend.service.mongodb.impl.RoomServiceImpl;
 import com.yimingliao.mshivebackend.service.mongodb.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -32,7 +33,7 @@ public class RoomController {
     //Insert One Room
     @PutMapping("/{user_uuid}/insert_one")
     public R insertOneRoom(@PathVariable("user_uuid") String userUUId, @RequestBody Room room) {
-        if(userService.searchOneUserByUserUUId(userUUId).getStatus() != 200){
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Insert Forbidden", new Date(), "无权限新增");
         }
         return roomService.insertOneRoom(room);
@@ -72,5 +73,25 @@ public class RoomController {
     public R searchOneRoomByUserUUId(@RequestParam(name = "userUUId") String userUUId,
                                      @RequestParam(name = "roomId") Long roomId) {
         return roomService.searchOneRoomByUserUUId(userUUId, roomId);
+    }
+
+    //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
+    @PostMapping("/{user_uuid}/download_report_form")
+    public R downloadOneUserRoomReportForm(HttpServletResponse response,
+                                           @PathVariable("user_uuid") String userUUId,
+                                           @RequestParam(name = "start_date") String startDate,
+                                           @RequestParam(name = "end_date") String endDate,
+                                           @RequestParam(name = "only_bookmarks") Boolean onlyBookmarks,
+                                           @RequestParam(name = "need_all") Boolean needAll
+    ) {
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
+            return R.error(403, "Download Forbidden", new Date(), "无权限下载");
+        }
+        //roomReportForm
+        try {
+            return roomService.downloadOneUserRoomReportForm(response, userUUId, startDate, endDate, onlyBookmarks, needAll);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
