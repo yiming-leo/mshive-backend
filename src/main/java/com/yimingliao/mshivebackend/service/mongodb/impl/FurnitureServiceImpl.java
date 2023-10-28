@@ -1,9 +1,11 @@
 package com.yimingliao.mshivebackend.service.mongodb.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.mongodb.client.result.UpdateResult;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.dto.FurnitureScrollListDTO;
 import com.yimingliao.mshivebackend.entity.mongodb.Furniture;
+import com.yimingliao.mshivebackend.entity.report.FurnitureReportForm;
 import com.yimingliao.mshivebackend.mapper.mongodb.FurnitureRepository;
 import com.yimingliao.mshivebackend.service.mongodb.IFurnitureService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -133,5 +139,39 @@ public class FurnitureServiceImpl implements IFurnitureService {
             return R.error(404, "Search Failed", new Date());
         }
         return R.success(200, "Search Success", new Date(), furnitureList);
+    }
+
+    //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
+    @Override
+    public R downloadOneUserFurnitureReportForm(HttpServletResponse response,
+                                                String userUUId, String startDate,
+                                                String endDate, Boolean onlyBookmarks,
+                                                Boolean needAll) throws IOException {
+        //查询条件
+        Query query = new Query();
+        query.addCriteria(Criteria.where("ref_user_id").is(userUUId));
+        query.addCriteria(Criteria.where("is_bookmarks").is(onlyBookmarks));
+        if (!needAll) {
+            query.addCriteria(Criteria.where("modify_time").gte(startDate).lte(endDate));
+        }
+        List<Furniture> furnitureList = mongoTemplate.find(query, Furniture.class);
+        log.info(furnitureList.toString());
+        if (furnitureList.isEmpty()) {
+            return R.error(404, "Download Failed", new Date(), "No data");
+        }
+        //组装Excel文件
+        String fileName = "furniture" + System.currentTimeMillis() + ".xlsx";
+        //写文件流响应
+        ServletOutputStream out = response.getOutputStream();
+        response.setContentType("multipart/form-data");
+        response.setCharacterEncoding("utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" +
+                URLEncoder.encode(fileName, "UTF-8"));
+        //装入easy excel
+        EasyExcel.write(out, FurnitureReportForm.class)
+                .autoCloseStream(true).sheet("sheet1").doWrite(furnitureList);
+        //清空文件流残存
+        out.flush();
+        return R.success(200, "Download Success", new Date(), furnitureList);
     }
 }

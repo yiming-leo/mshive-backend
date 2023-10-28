@@ -3,6 +3,9 @@ package com.yimingliao.mshivebackend.service.mongodb;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.mongodb.Furniture;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * @author Calendo
  * @version 1.0
@@ -29,4 +32,9 @@ public interface IFurnitureService {
     //Find One User's One Furniture, need userUUId & furnitureId
     R searchOneFurnitureByUserUUId(String userUUId, Long furnitureId);
 
+    //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
+    R downloadOneUserFurnitureReportForm(HttpServletResponse response,
+                                         String userUUId, String startDate,
+                                         String endDate, Boolean onlyBookmarks,
+                                         Boolean needAll) throws IOException;
 }
