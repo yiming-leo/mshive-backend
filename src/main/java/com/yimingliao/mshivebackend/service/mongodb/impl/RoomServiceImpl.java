@@ -165,12 +165,16 @@ public class RoomServiceImpl implements IRoomService {
         }
         //组装Excel文件
         String fileName = "room" + System.currentTimeMillis() + ".xlsx";
+        //写文件流响应
         ServletOutputStream out = response.getOutputStream();
         response.setContentType("multipart/form-data");
         response.setCharacterEncoding("utf-8");
-        response.setHeader("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" + URLEncoder.encode(fileName + ".xlsx", "UTF-8"));
-
-        EasyExcel.write(out, RoomReportForm.class).autoCloseStream(true).sheet("sheet1").doWrite(roomList);
+        response.setHeader("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" +
+                URLEncoder.encode(fileName, "UTF-8"));
+        //装入easy excel
+        EasyExcel.write(out, RoomReportForm.class)
+                .autoCloseStream(true).sheet("sheet1").doWrite(roomList);
+        //清空文件流残存
         out.flush();
         return R.success(200, "Success", new Date(), roomList);
     }
