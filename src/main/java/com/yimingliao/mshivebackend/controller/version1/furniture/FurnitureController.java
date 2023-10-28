@@ -3,9 +3,12 @@ package com.yimingliao.mshivebackend.controller.version1.furniture;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.mongodb.Furniture;
 import com.yimingliao.mshivebackend.service.mongodb.impl.FurnitureServiceImpl;
+import com.yimingliao.mshivebackend.service.mongodb.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * @author Calendo
@@ -21,42 +24,66 @@ public class FurnitureController {
     @Autowired
     private FurnitureServiceImpl furnitureService;
 
+    @Autowired
+    private UserServiceImpl userService;
+
     //Insert One Furniture
-    @PutMapping("/insert_one")
-    public R insertOneFurniture(@RequestBody Furniture furniture) {
+    @PutMapping("/{user_uuid}/insert_one")
+    public R insertOneFurniture(@PathVariable("user_uuid") String userUUId,
+                                @RequestBody Furniture furniture) {
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
+            return R.error(403, "Insert Forbidden", new Date(), "无权限新增");
+        }
         return furnitureService.insertOneFurniture(furniture);
     }
 
     //Update One Furniture
-    @PatchMapping("/update_one")
-    public R updateOneFurniture(@RequestBody Furniture furniture) {
+    @PatchMapping("/{user_uuid}/update_one")
+    public R updateOneFurniture(@PathVariable(name = "user_uuid") String userUUId,
+                                @RequestBody Furniture furniture) {
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
+            return R.error(403, "Update Forbidden", new Date(), "无权限修改");
+        }
         return furnitureService.updateOneFurniture(furniture);
     }
 
     //Delete One User's Furniture, need furnitureUUId
-    @DeleteMapping("/delete_one")
-    public R deleteOneFurnitureByFurnitureUUId(@RequestParam(name = "furnitureUUId") String furnitureUUId) {
+    @DeleteMapping("/{user_uuid}/delete_one")
+    public R deleteOneFurnitureByFurnitureUUId(@PathVariable(name = "user_uuid") String userUUId,
+                                               @RequestParam(name = "furniture_uuid") String furnitureUUId) {
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
+            return R.error(403, "Delete Forbidden", new Date(), "无权限删除");
+        }
         return furnitureService.deleteOneFurnitureByFurnitureUUId(furnitureUUId);
     }
 
     //Find One User's Some Furniture, need userUUId, lastSeenFurnitureId & searchSize
-    @GetMapping("/search_list")
-    public R searchFurnitureListByUserUUId(@RequestParam(name = "userUUId") String userUUId,
-                                      @RequestParam(name = "lastSeenFurnitureId") Long lastSeenFurnitureId,
-                                      @RequestParam(name = "searchSize") Integer searchSize) {
+    @GetMapping("/{user_uuid}/search_list")
+    public R searchFurnitureListByUserUUId(@PathVariable(name = "user_uuid") String userUUId,
+                                      @RequestParam(name = "last_seen_furniture_id") Long lastSeenFurnitureId,
+                                      @RequestParam(name = "search_size") Integer searchSize) {
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
+            return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
+        }
         return furnitureService.searchFurnitureListByUserUUId(userUUId, lastSeenFurnitureId, searchSize);
     }
 
     //Find One User's All Furniture
-    @GetMapping("/search_all")
-    public R searchFurnitureAllByUserUUId(@RequestParam(name = "userUUId") String userUUId) {
+    @GetMapping("/{user_uuid}/search_all")
+    public R searchFurnitureAllByUserUUId(@PathVariable(name = "user_uuid") String userUUId) {
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
+            return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
+        }
         return furnitureService.searchFurnitureAllByUserUUId(userUUId);
     }
 
     //Find One User's One Furniture, need userUUId & furnitureId
-    @GetMapping("/search_one")
-    public R searchOneFurnitureByUserUUId(@RequestParam(name = "userUUId") String userUUId,
-                                     @RequestParam(name = "furnitureId") Long furnitureId) {
+    @GetMapping("/{user_uuid}/search_one")
+    public R searchOneFurnitureByUserUUId(@PathVariable(name = "user_uuid") String userUUId,
+                                     @RequestParam(name = "furniture_id") Long furnitureId) {
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
+            return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
+        }
         return furnitureService.searchOneFurnitureByUserUUId(userUUId, furnitureId);
     }
 }
