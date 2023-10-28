@@ -175,37 +175,4 @@ public class FurnitureServiceImpl implements IFurnitureService {
         return R.success(200, "Download Success", new Date(), furnitureList);
     }
 
-    //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
-    @Override
-    public R downloadOneUserFurnitureReportForm(HttpServletResponse response,
-                                           String userUUId, String startDate,
-                                           String endDate, Boolean onlyBookmarks,
-                                           Boolean needAll) throws IOException {
-        //查询条件
-        Query query = new Query();
-        query.addCriteria(Criteria.where("ref_user_id").is(userUUId));
-        query.addCriteria(Criteria.where("is_bookmarks").is(onlyBookmarks));
-        if (!needAll) {
-            query.addCriteria(Criteria.where("modify_time").gte(startDate).lte(endDate));
-        }
-        List<Furniture> furnitureList = mongoTemplate.find(query, Furniture.class);
-        log.info(furnitureList.toString());
-        if (furnitureList.isEmpty()) {
-            return R.error(404, "Download Failed", new Date(), "No data");
-        }
-        //组装Excel文件
-        String fileName = "furniture" + System.currentTimeMillis() + ".xlsx";
-        //写文件流响应
-        ServletOutputStream out = response.getOutputStream();
-        response.setContentType("multipart/form-data");
-        response.setCharacterEncoding("utf-8");
-        response.setHeader("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" +
-                URLEncoder.encode(fileName, "UTF-8"));
-        //装入easy excel
-        EasyExcel.write(out, FurnitureReportForm.class)
-                .autoCloseStream(true).sheet("sheet1").doWrite(furnitureList);
-        //清空文件流残存
-        out.flush();
-        return R.success(200, "Download Success", new Date(), furnitureList);
-    }
 }
