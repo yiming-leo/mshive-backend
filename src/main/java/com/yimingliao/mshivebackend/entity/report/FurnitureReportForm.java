@@ -26,7 +26,7 @@ public class FurnitureReportForm {
     @ExcelProperty("家具名称")
     private String name;
 
-    //房间属性
+    //家具属性
     @ExcelProperty("属性")
     private String attribute;
 
