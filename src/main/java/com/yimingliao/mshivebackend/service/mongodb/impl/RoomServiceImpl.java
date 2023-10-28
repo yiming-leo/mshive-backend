@@ -1,9 +1,11 @@
 package com.yimingliao.mshivebackend.service.mongodb.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.mongodb.client.result.UpdateResult;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.dto.RoomScrollListDTO;
 import com.yimingliao.mshivebackend.entity.mongodb.Room;
+import com.yimingliao.mshivebackend.entity.report.RoomReportForm;
 import com.yimingliao.mshivebackend.mapper.mongodb.RoomRepository;
 import com.yimingliao.mshivebackend.service.mongodb.IRoomService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -137,5 +143,35 @@ public class RoomServiceImpl implements IRoomService {
             return R.error(404, "Search Failed", new Date());
         }
         return R.success(200, "Search Success", new Date(), roomList);
+    }
+
+    //Download One User's Optional Room Report
+    @Override
+    public R downloadOneUserRoomReportForm(HttpServletResponse response,
+                                           String userUUId, String startDate,
+                                           String endDate, Boolean onlyBookmarks,
+                                           Boolean needAll) throws IOException {
+        //查询条件
+        Query query = new Query();
+        query.addCriteria(Criteria.where("ref_user_id").is(userUUId));
+        query.addCriteria(Criteria.where("is_bookmarks").is(onlyBookmarks));
+        if (!needAll) {
+            query.addCriteria(Criteria.where("modify_time").gte(startDate).lte(endDate));
+        }
+        List<Room> roomList = mongoTemplate.find(query, Room.class);
+        log.info(roomList.toString());
+        if (roomList.isEmpty()) {
+            return R.error(404, "Download Failed", new Date(), "No data");
+        }
+        //组装Excel文件
+        String fileName = "room" + System.currentTimeMillis() + ".xlsx";
+        ServletOutputStream out = response.getOutputStream();
+        response.setContentType("multipart/form-data");
+        response.setCharacterEncoding("utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" + URLEncoder.encode(fileName + ".xlsx", "UTF-8"));
+
+        EasyExcel.write(out, RoomReportForm.class).autoCloseStream(true).sheet("sheet1").doWrite(roomList);
+        out.flush();
+        return R.success(200, "Success", new Date(), roomList);
     }
 }

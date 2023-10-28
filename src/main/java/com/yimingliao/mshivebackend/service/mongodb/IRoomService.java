@@ -3,6 +3,9 @@ package com.yimingliao.mshivebackend.service.mongodb;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.mongodb.Room;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * @author Calendo
  * @version 1.0
@@ -28,5 +31,8 @@ public interface IRoomService {
 
     //Find One User's One Room, need userUUId & roomId
     R searchOneRoomByUserUUId(String userUUId, Long roomId);
+
+    //Download One User's Optional Room Report
+    R downloadOneUserRoomReportForm(HttpServletResponse response, String userUUId, String startDate, String endDate, Boolean onlyBookmarks, Boolean needAll) throws IOException;
 
 }
