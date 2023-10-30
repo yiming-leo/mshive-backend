@@ -21,7 +21,7 @@ public interface IESStuffService {
     SearchHits searchESStuffSimple(String keyword);
 
     //PAGE SEARCH <ESStuff> BY <USER UUID>
-    R searchPageESStuffByUserUUId(String userUUId, Long lastSeenStuffId, Integer searchSize);
+    R searchPageESStuffByUserUUId(String userUUId, Integer searchSize, Integer pageNumber);
 
     R searchESStuffAllByUserUUId(String userUUId);
 
