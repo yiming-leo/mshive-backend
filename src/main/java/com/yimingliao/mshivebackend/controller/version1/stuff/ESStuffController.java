@@ -43,7 +43,8 @@ public class ESStuffController {
 
     //SEARCH <ESStuff> BY <String keyword>, intro searching <Name> AND <Description>
     @GetMapping("/{user_uuid}/search")
-    public R searchESStuffSimple(@PathVariable("user_uuid") String userUUId, @RequestParam String keyword) {
+    public R searchESStuffSimple(@PathVariable("user_uuid") String userUUId,
+                                 @RequestParam String keyword) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
         }
@@ -51,14 +52,15 @@ public class ESStuffController {
         return R.success(200, "ES Search Success", new Date(), searchHits);
     }
 
-    @GetMapping("/{user_uuid}/search_page")
+    //ES分页查询，searchSize: 每页数据量，pageNumber: 目前是第几页（滚动增长）
+    @GetMapping("/{user_uuid}/search_list")
     public R searchPageESStuffByUserUUId(@PathVariable("user_uuid") String userUUId,
-                                         @RequestParam Long lastSeenStuffId,
-                                         @RequestParam Integer searchSize) {
+                                         @RequestParam("search_size") Integer searchSize,
+                                         @RequestParam("page_number") Integer pageNumber) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
         }
-        return esStuffService.searchPageESStuffByUserUUId(userUUId, lastSeenStuffId, searchSize);
+        return esStuffService.searchPageESStuffByUserUUId(userUUId, searchSize, pageNumber);
     }
 
     @GetMapping("/{user_uuid}/search_user_all")
@@ -70,7 +72,8 @@ public class ESStuffController {
     }
 
     @PutMapping("/{user_uuid}/insert_one")
-    public R insertOneESStuff(@PathVariable("user_uuid") String userUUId, @RequestBody ESStuff esStuff) {
+    public R insertOneESStuff(@PathVariable("user_uuid") String userUUId,
+                              @RequestBody ESStuff esStuff) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Insert Forbidden", new Date(), "无权限新增");
         }
@@ -78,7 +81,8 @@ public class ESStuffController {
     }
 
     @PatchMapping("/{user_uuid}/update_one")
-    public R updateOneESStuff(@PathVariable("user_uuid") String userUUId, @RequestBody ESStuff esStuff) {
+    public R updateOneESStuff(@PathVariable("user_uuid") String userUUId,
+                              @RequestBody ESStuff esStuff) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Update Forbidden", new Date(), "无权限修改");
         }
@@ -86,7 +90,8 @@ public class ESStuffController {
     }
 
     @DeleteMapping("/{user_uuid}/delete_one")
-    public R deleteOneESStuff(@PathVariable("user_uuid") String userUUId, @RequestParam String esstuffUUId) {
+    public R deleteOneESStuff(@PathVariable("user_uuid") String userUUId,
+                              @RequestParam String esstuffUUId) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Delete Forbidden", new Date(), "无权限删除");
         }
