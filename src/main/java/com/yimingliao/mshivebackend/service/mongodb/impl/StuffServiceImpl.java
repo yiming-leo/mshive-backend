@@ -1,6 +1,5 @@
 package com.yimingliao.mshivebackend.service.mongodb.impl;
 
-import com.alibaba.excel.EasyExcel;
 import com.mongodb.client.result.UpdateResult;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.dto.StuffScrollListDTO;
@@ -8,6 +7,7 @@ import com.yimingliao.mshivebackend.entity.mongodb.Stuff;
 import com.yimingliao.mshivebackend.entity.report.StuffReportForm;
 import com.yimingliao.mshivebackend.mapper.mongodb.StuffRepository;
 import com.yimingliao.mshivebackend.service.mongodb.IStuffService;
+import com.yimingliao.mshivebackend.utils.ReportFormWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,10 +16,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -31,13 +29,16 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class StuffServiceImpl  implements IStuffService {
+public class StuffServiceImpl implements IStuffService {
 
     @Autowired
     private StuffRepository stuffRepository;
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private ReportFormWriter reportFormWriter;
 
     //Insert One Stuff
     @Override
@@ -156,22 +157,13 @@ public class StuffServiceImpl  implements IStuffService {
         }
         List<Stuff> stuffList = mongoTemplate.find(query, Stuff.class);
         log.info(stuffList.toString());
+        //空则404
         if (stuffList.isEmpty()) {
             return R.error(404, "Download Failed", new Date(), "No data");
         }
-        //组装Excel文件
-        String fileName = "stuff" + System.currentTimeMillis() + ".xlsx";
-        //写文件流响应
-        ServletOutputStream out = response.getOutputStream();
-        response.setContentType("multipart/form-data");
-        response.setCharacterEncoding("utf-8");
-        response.setHeader("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" +
-                URLEncoder.encode(fileName, "UTF-8"));
-        //装入easy excel
-        EasyExcel.write(out, StuffReportForm.class)
-                .autoCloseStream(true).sheet("sheet1").doWrite(stuffList);
-        //清空文件流残存
-        out.flush();
-        return R.success(200, "Download Success", new Date(), stuffList);
+
+        //交给报表生成工具类处理
+        List<?> excelReportFormList = reportFormWriter.excelReportForm(response, stuffList, StuffReportForm.class);
+        return R.success(200, "Download Success", new Date(), excelReportFormList);
     }
 }

@@ -57,8 +57,4 @@ public class RoomReportForm {
     @ExcelProperty("上次修改时间")
     private String modifyTime;
 
-    //用户归属指向
-    @ExcelProperty("所属用户")
-    private String refUserId;
-
 }

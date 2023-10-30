@@ -35,7 +35,7 @@ public class Stuff implements Serializable {
     //此ID为增量ID，为分页查询使用
     @Indexed
     @AutoIncKey
-    @Field("furniture_id")
+    @Field("stuff_id")
     private Long furnitureId = 0L;
 
     //家具名称
