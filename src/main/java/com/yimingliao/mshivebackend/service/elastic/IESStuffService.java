@@ -23,6 +23,9 @@ public interface IESStuffService {
     //PAGE SEARCH <ESStuff> BY <USER UUID>
     R searchPageESStuffByUserUUId(String userUUId, Integer searchSize, Integer pageNumber);
 
+    //KEYWORD PAGE SEARCH <ESStuff> BY <USER UUID> & <Keyword>
+    R searchKeywordPageESStuffByUserUUId(String userUUId, String nameKeyword, String descriptionKeyword, Integer searchSize, Integer pageNumber);
+
     R searchESStuffAllByUserUUId(String userUUId);
 
     //INSERT ONE <ESStuff> BY <ESStuff>

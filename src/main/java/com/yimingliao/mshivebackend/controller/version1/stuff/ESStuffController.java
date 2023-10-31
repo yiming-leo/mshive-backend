@@ -44,7 +44,7 @@ public class ESStuffController {
     //SEARCH <ESStuff> BY <String keyword>, intro searching <Name> AND <Description>
     @GetMapping("/{user_uuid}/search")
     public R searchESStuffSimple(@PathVariable("user_uuid") String userUUId,
-                                 @RequestParam String keyword) {
+                                 @RequestParam("keyword") String keyword) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
         }
@@ -61,6 +61,19 @@ public class ESStuffController {
             return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
         }
         return esStuffService.searchPageESStuffByUserUUId(userUUId, searchSize, pageNumber);
+    }
+
+    //ES关键词分页查询（keyword+page），searchSize: 每页数据量，pageNumber: 目前是第几页（滚动增长），keyword: 搜索关键词
+    @GetMapping("/{user_uuid}/search_keyword_list")
+    public R searchKeywordPageESStuffByUserUUId(@PathVariable("user_uuid") String userUUId,
+                                                @RequestParam("name_keyword") String nameKeyword,
+                                                @RequestParam("description_keyword") String descriptionKeyword,
+                                                @RequestParam("search_size") Integer searchSize,
+                                                @RequestParam("page_number") Integer pageNumber) {
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
+            return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
+        }
+        return esStuffService.searchKeywordPageESStuffByUserUUId(userUUId, nameKeyword, descriptionKeyword, searchSize, pageNumber);
     }
 
     @GetMapping("/{user_uuid}/search_user_all")
