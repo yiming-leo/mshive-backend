@@ -15,6 +15,7 @@ import java.util.Date;
  * @description TODO
  * @date 2023/10/25 0:15
  */
+@CrossOrigin
 @RestController
 @Slf4j
 @RequestMapping("/v1/user")

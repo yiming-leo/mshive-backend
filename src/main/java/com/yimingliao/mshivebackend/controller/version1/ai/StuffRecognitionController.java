@@ -25,7 +25,8 @@ import java.util.List;
  * @description AI物品识别模块接口，只有一个函数：imageMediaTagging，拥有1.分类贴标签返回；2.分类贴标签定位返回
  * @date 2023/10/14 20:30
  */
-@Controller
+@CrossOrigin
+@RestController
 @RequestMapping("/v1/ai")
 @Slf4j
 public class StuffRecognitionController {

@@ -12,10 +12,7 @@ import com.yimingliao.mshivebackend.service.mongodb.impl.UserServiceImpl;
 import com.yimingliao.mshivebackend.utils.BookmarkTreeUtil;
 import com.yimingliao.mshivebackend.vo.BookmarkTreeVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +24,7 @@ import java.util.List;
  * @description TODO
  * @date 2023/10/31 23:52
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/v1/bk_tree")
 public class BookmarkTreeController {

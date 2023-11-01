@@ -18,7 +18,7 @@ import java.util.List;
  * @description Elasticsearch Stuff Controller
  * @date 2023/10/19 20:56
  */
-
+@CrossOrigin
 @RestController
 @Slf4j
 @RequestMapping("/v1/es_stuff")

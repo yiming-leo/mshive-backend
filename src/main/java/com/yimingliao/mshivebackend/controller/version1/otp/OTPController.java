@@ -15,6 +15,7 @@ import java.util.Date;
  * @description 使用Redis进行管理登录注册业务的控制器
  * @date 2023/10/21 14:55
  */
+@CrossOrigin
 @RestController
 @Slf4j
 @RequestMapping("/v1/otp")

@@ -18,6 +18,7 @@ import java.util.Date;
  * @description 操作MongoDB中Room类的Controller层
  * @date 2023/10/18 22:12
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/v1/room")
 @Slf4j
