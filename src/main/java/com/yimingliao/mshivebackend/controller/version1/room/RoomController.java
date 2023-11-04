@@ -6,6 +6,7 @@ import com.yimingliao.mshivebackend.service.mongodb.impl.RoomServiceImpl;
 import com.yimingliao.mshivebackend.service.mongodb.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -94,19 +95,18 @@ public class RoomController {
 
     //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
     @PostMapping("/{user_uuid}/download_report_form")
-    public R downloadOneUserRoomReportForm(HttpServletResponse response,
-                                           @PathVariable("user_uuid") String userUUId,
-                                           @RequestParam(name = "start_date") String startDate,
-                                           @RequestParam(name = "end_date") String endDate,
-                                           @RequestParam(name = "only_bookmarks") Boolean onlyBookmarks,
-                                           @RequestParam(name = "need_all") Boolean needAll
+    public ResponseEntity downloadOneUserRoomReportForm(@PathVariable("user_uuid") String userUUId,
+                                                        @RequestParam(name = "start_date") String startDate,
+                                                        @RequestParam(name = "end_date") String endDate,
+                                                        @RequestParam(name = "only_bookmarks") Boolean onlyBookmarks,
+                                                        @RequestParam(name = "need_all") Boolean needAll
     ) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
-            return R.error(403, "Download Forbidden", new Date(), "无权限下载");
+            return null;
         }
         //roomReportForm
         try {
-            return roomService.downloadOneUserRoomReportForm(response, userUUId, startDate, endDate, onlyBookmarks, needAll);
+            return roomService.downloadOneUserRoomReportForm(userUUId, startDate, endDate, onlyBookmarks, needAll);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -2,14 +2,16 @@ package com.yimingliao.mshivebackend.utils;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.excel.EasyExcel;
-import com.yimingliao.mshivebackend.common.R;
-import com.yimingliao.mshivebackend.entity.report.StuffReportForm;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.util.List;
 
 /**
@@ -21,27 +23,34 @@ import java.util.List;
 @Component
 public class ReportFormWriter {
 
-    public List<?> excelReportForm(HttpServletResponse response,
-                                   List<?> rawEntityList,
-                                   Class<?> toEntityClassName) throws IOException {
+    public ResponseEntity excelReportForm(List<?> rawEntityList,
+                                          Class<?> toEntityClassName) throws IOException {
         //写文件名
         String fileName = toEntityClassName.getSimpleName() + System.currentTimeMillis() + ".xlsx";
 
         //写文件流响应
-        ServletOutputStream out = response.getOutputStream();
-        response.setContentType("multipart/form-data");
-        response.setCharacterEncoding("utf-8");
-        response.setHeader("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" +
+        String filePath = "/" + fileName;
+        File file = new File(filePath);
+
+        //写响应头
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Headers", "*");
+        headers.add("Access-Control-Allow-Methods", "*");
+        headers.add("Access-Control-Allow-Credentials", "true");
+        headers.add("Access-Control-Max-Age", "3600");
+        headers.add("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" +
                 URLEncoder.encode(fileName, "UTF-8"));
 
         //将List<stuff> bean转为List<stuffReportForm> bean
         List<?> resultList = BeanUtil.copyToList(rawEntityList, toEntityClassName);
         //装入easy excel
-        EasyExcel.write(out, toEntityClassName)
+        EasyExcel.write(file, toEntityClassName)
                 .autoCloseStream(true).sheet("sheet1").doWrite(resultList);
-        //清空文件流残存
-        out.flush();
-        return resultList;
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new InputStreamResource(Files.newInputStream(file.toPath())));
     }
 
 }

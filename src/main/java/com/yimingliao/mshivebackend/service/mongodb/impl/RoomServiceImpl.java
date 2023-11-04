@@ -5,6 +5,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.dto.RoomScrollListDTO;
 import com.yimingliao.mshivebackend.entity.mongodb.Room;
+import com.yimingliao.mshivebackend.entity.report.FurnitureReportForm;
 import com.yimingliao.mshivebackend.entity.report.RoomReportForm;
 import com.yimingliao.mshivebackend.entity.report.StuffReportForm;
 import com.yimingliao.mshivebackend.mapper.mongodb.RoomRepository;
@@ -16,6 +17,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
@@ -152,10 +154,9 @@ public class RoomServiceImpl implements IRoomService {
 
     //Download One User's Optional Room Report
     @Override
-    public R downloadOneUserRoomReportForm(HttpServletResponse response,
-                                           String userUUId, String startDate,
-                                           String endDate, Boolean onlyBookmarks,
-                                           Boolean needAll) throws IOException {
+    public ResponseEntity downloadOneUserRoomReportForm(String userUUId, String startDate,
+                                                        String endDate, Boolean onlyBookmarks,
+                                                        Boolean needAll) throws IOException {
         //查询条件
         Query query = new Query();
         query.addCriteria(Criteria.where("ref_user_id").is(userUUId));
@@ -166,12 +167,12 @@ public class RoomServiceImpl implements IRoomService {
         List<Room> roomList = mongoTemplate.find(query, Room.class);
         log.info(roomList.toString());
         if (roomList.isEmpty()) {
-            return R.error(404, "Download Failed", new Date(), "No data");
+            return null;
         }
 
         //交给报表生成工具类处理
-        List<?> excelReportFormList = reportFormWriter.excelReportForm(response, roomList, RoomReportForm.class);
-
-        return R.success(200, "Success", new Date(), excelReportFormList);
+        ResponseEntity responseEntity = reportFormWriter.excelReportForm(roomList, FurnitureReportForm.class);
+        log.info(responseEntity.toString());
+        return responseEntity;
     }
 }

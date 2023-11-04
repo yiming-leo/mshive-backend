@@ -4,6 +4,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.dto.StuffScrollListDTO;
 import com.yimingliao.mshivebackend.entity.mongodb.Stuff;
+import com.yimingliao.mshivebackend.entity.report.FurnitureReportForm;
 import com.yimingliao.mshivebackend.entity.report.StuffReportForm;
 import com.yimingliao.mshivebackend.mapper.mongodb.StuffRepository;
 import com.yimingliao.mshivebackend.service.mongodb.IStuffService;
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -144,10 +146,9 @@ public class StuffServiceImpl implements IStuffService {
 
     //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
     @Override
-    public R downloadOneUserStuffReportForm(HttpServletResponse response,
-                                            String userUUId, String startDate,
-                                            String endDate, Boolean onlyBookmarks,
-                                            Boolean needAll) throws IOException {
+    public ResponseEntity downloadOneUserStuffReportForm(String userUUId, String startDate,
+                                                         String endDate, Boolean onlyBookmarks,
+                                                         Boolean needAll) throws IOException {
         //查询条件
         Query query = new Query();
         query.addCriteria(Criteria.where("ref_user_id").is(userUUId));
@@ -159,11 +160,12 @@ public class StuffServiceImpl implements IStuffService {
         log.info(stuffList.toString());
         //空则404
         if (stuffList.isEmpty()) {
-            return R.error(404, "Download Failed", new Date(), "No data");
+            return null;
         }
 
         //交给报表生成工具类处理
-        List<?> excelReportFormList = reportFormWriter.excelReportForm(response, stuffList, StuffReportForm.class);
-        return R.success(200, "Download Success", new Date(), excelReportFormList);
+        ResponseEntity responseEntity = reportFormWriter.excelReportForm(stuffList, FurnitureReportForm.class);
+        log.info(responseEntity.toString());
+        return responseEntity;
     }
 }

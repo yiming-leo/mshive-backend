@@ -5,7 +5,6 @@ import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.dto.FurnitureScrollListDTO;
 import com.yimingliao.mshivebackend.entity.mongodb.Furniture;
 import com.yimingliao.mshivebackend.entity.report.FurnitureReportForm;
-import com.yimingliao.mshivebackend.entity.report.StuffReportForm;
 import com.yimingliao.mshivebackend.mapper.mongodb.FurnitureRepository;
 import com.yimingliao.mshivebackend.service.mongodb.IFurnitureService;
 import com.yimingliao.mshivebackend.utils.ReportFormWriter;
@@ -15,9 +14,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -145,8 +144,7 @@ public class FurnitureServiceImpl implements IFurnitureService {
 
     //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
     @Override
-    public R downloadOneUserFurnitureReportForm(HttpServletResponse response,
-                                                String userUUId, String startDate,
+    public ResponseEntity downloadOneUserFurnitureReportForm(String userUUId, String startDate,
                                                 String endDate, Boolean onlyBookmarks,
                                                 Boolean needAll) throws IOException {
         //查询条件
@@ -159,12 +157,13 @@ public class FurnitureServiceImpl implements IFurnitureService {
         List<Furniture> furnitureList = mongoTemplate.find(query, Furniture.class);
         log.info(furnitureList.toString());
         if (furnitureList.isEmpty()) {
-            return R.error(404, "Download Failed", new Date(), "No data");
+            return null;
         }
 
         //交给报表生成工具类处理
-        List<?> excelReportFormList = reportFormWriter.excelReportForm(response, furnitureList, FurnitureReportForm.class);
-        return R.success(200, "Download Success", new Date(), excelReportFormList);
+        ResponseEntity responseEntity = reportFormWriter.excelReportForm(furnitureList, FurnitureReportForm.class);
+        log.info(responseEntity.toString());
+        return responseEntity;
     }
 
 }

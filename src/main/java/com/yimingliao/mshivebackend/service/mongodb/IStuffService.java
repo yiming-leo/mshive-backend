@@ -2,6 +2,7 @@ package com.yimingliao.mshivebackend.service.mongodb;
 
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.entity.mongodb.Stuff;
+import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,9 +34,8 @@ public interface IStuffService {
     R searchOneStuffByUserUUId(String userUUId, Long stuffId);
 
     //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
-    R downloadOneUserStuffReportForm(HttpServletResponse response,
-                                         String userUUId, String startDate,
-                                         String endDate, Boolean onlyBookmarks,
-                                         Boolean needAll) throws IOException;
+    ResponseEntity downloadOneUserStuffReportForm(String userUUId, String startDate,
+                                                  String endDate, Boolean onlyBookmarks,
+                                                  Boolean needAll) throws IOException;
 
 }
