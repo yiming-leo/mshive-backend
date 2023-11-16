@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Calendo
@@ -88,9 +89,19 @@ public class RoomController {
     public R searchOneRoomByUserUUId(@PathVariable("user_uuid") String userUUId,
                                      @RequestParam(name = "room_id") Long roomId) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
-            return R.error(403, "Insert Forbidden", new Date(), "无权限新增");
+            return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
         }
         return roomService.searchOneRoomByUserUUId(userUUId, roomId);
+    }
+
+    //Find One User's One Room, need userUUId & roomId
+    @PostMapping("/{user_uuid}/search_room_list_by_room_uuids")
+    public R searchRoomByRoomUUId(@PathVariable("user_uuid") String userUUId,
+                                  @RequestBody List<String> roomUUIds) {
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
+            return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
+        }
+        return roomService.searchRoomListByRoomUUIdList(roomUUIds);
     }
 
     //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm

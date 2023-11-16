@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Calendo
@@ -32,6 +33,9 @@ public interface IRoomService {
 
     //Find One User's One Room, need userUUId & roomId
     R searchOneRoomByUserUUId(String userUUId, Long roomId);
+
+    //Search RoomList By RoomUUId List
+    R searchRoomListByRoomUUIdList(List<String> roomUUIds);
 
     //Download One User's Optional Room Report
     ResponseEntity downloadOneUserRoomReportForm(String userUUId, String startDate, String endDate, Boolean onlyBookmarks, Boolean needAll) throws IOException;

@@ -1,0 +1,46 @@
+{
+  "name": "Root",
+  "id": "648fdfbb54b0950d00c37c2e",
+  "image": "",
+  "children": [
+    {
+      "name": "老家",
+      "id": "648fe2130df02d3007092a58",
+      "mainColor": "#2196F3",
+      "minorColor": "#ffaaaa",
+      "attribute": "老家罢了",
+      "image": "https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg",
+      "children": [
+        {
+          "name": "大书柜",
+          "id": "648fe4410df02d3007092a61",
+          "mainColor": "#ffaaaa",
+          "minorColor": "#aaffff",
+          "isBookmarks": true,
+          "attribute": "书柜",
+          "image": "https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg",
+          "children": [
+            {
+              "name": "劳力士",
+              "id": "648fe2130df02d3007092a64",
+              "mainColor": "#cecece",
+              "minorColor": "#818596",
+              "isBookmarks": true,
+              "attribute": "手表",
+              "image": "https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg"
+            },
+            {
+              "name": "充电宝",
+              "id": "648fe2130df02d3007092a63",
+              "mainColor": "#eeeeee",
+              "minorColor": "#242631",
+              "isBookmarks": false,
+              "attribute": "电器",
+              "image": "https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

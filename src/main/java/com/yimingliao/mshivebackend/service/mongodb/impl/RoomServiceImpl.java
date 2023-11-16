@@ -1,13 +1,10 @@
 package com.yimingliao.mshivebackend.service.mongodb.impl;
 
-import com.alibaba.excel.EasyExcel;
 import com.mongodb.client.result.UpdateResult;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.dto.RoomScrollListDTO;
 import com.yimingliao.mshivebackend.entity.mongodb.Room;
 import com.yimingliao.mshivebackend.entity.report.FurnitureReportForm;
-import com.yimingliao.mshivebackend.entity.report.RoomReportForm;
-import com.yimingliao.mshivebackend.entity.report.StuffReportForm;
 import com.yimingliao.mshivebackend.mapper.mongodb.RoomRepository;
 import com.yimingliao.mshivebackend.service.mongodb.IRoomService;
 import com.yimingliao.mshivebackend.utils.ReportFormWriter;
@@ -20,10 +17,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -150,6 +145,22 @@ public class RoomServiceImpl implements IRoomService {
             return R.error(404, "Search Failed", new Date());
         }
         return R.success(200, "Search Success", new Date(), roomList);
+    }
+
+    //Search RoomList By RoomUUId List
+    @Override
+    public R searchRoomListByRoomUUIdList(List<String> roomUUIds) {
+        List<Room> roomListResult = new ArrayList<>();
+        for (String roomUUId : roomUUIds) {
+            Query query = new Query();
+            query.addCriteria(Criteria.where("id").is(roomUUId));
+            List<Room> roomList = mongoTemplate.find(query, Room.class);
+            if (roomList.isEmpty()) {
+                return R.error(404, "Search Failed", new Date());
+            }
+            roomListResult.add(roomList.get(0));
+        }
+        return R.success(200, "Search Success", new Date(), roomListResult);
     }
 
     //Download One User's Optional Room Report

@@ -45,7 +45,7 @@ public class BookmarkTreeController {
     public R treeTest(@PathVariable("user_uuid") String userUUId) {
         R r = userService.searchOneUserByUserUUId(userUUId);
         if (r.getStatus() != 200) {
-            return R.error(403, "Insert Forbidden", new Date(), "无权限新增");
+            return R.error(403, "Tree Search Forbidden", new Date(), "无权限查询物品树");
         }
         User data = (User) r.getData();
         String username = data.getUsername();
