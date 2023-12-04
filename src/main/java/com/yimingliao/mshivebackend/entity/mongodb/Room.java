@@ -16,7 +16,7 @@ import java.io.Serializable;
 /**
  * @author Calendo
  * @version 1.0
- * @description MongoDB Room Entity
+ * @description MongoDB Room Entity，@JsonProperty影响mongodb返回后的字段名
  * @date 2023/10/17 21:24
  */
 
@@ -53,17 +53,17 @@ public class Room implements Serializable {
 
     //主颜色
     @Field("main_color")
-    @JsonProperty("main_color")
+    @JsonProperty("mainColor")
     private String mainColor;
 
     //副颜色
     @Field("minor_color")
-    @JsonProperty("minor_color")
+    @JsonProperty("minorColor")
     private String minorColor;
 
     //图片地址
     @Field("img_url")
-    @JsonProperty("img_url")
+    @JsonProperty("imgUrl")
     private String imgUrl;
 
     //描述
@@ -73,26 +73,26 @@ public class Room implements Serializable {
 
     //标记
     @Field("is_bookmarks")
-    @JsonProperty("is_bookmarks")
+    @JsonProperty("isBookmarks")
     private Boolean isBookmarks;
 
     //修改次数
     @Field("modify_count")
-    @JsonProperty("modify_count")
+    @JsonProperty("modifyCount")
     private Integer modifyCount;
 
     //上次修改时间
     @Field("modify_time")
-    @JsonProperty("modify_time")
+    @JsonProperty("modifyTime")
     private String modifyTime;
 
     //是否已删除
     @Field("is_deleted")
-    @JsonProperty("is_deleted")
+    @JsonProperty("isDeleted")
     private Boolean isDeleted;
 
     //用户归属指向
     @Field("ref_user_id")
-    @JsonProperty("ref_user_id")
+    @JsonProperty("refUserId")
     private String refUserId;
 }

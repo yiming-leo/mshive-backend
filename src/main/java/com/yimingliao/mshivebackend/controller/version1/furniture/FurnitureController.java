@@ -30,6 +30,7 @@ public class FurnitureController {
     @Autowired
     private UserServiceImpl userService;
 
+    //-----------------------------------------INSERT---------------------------------------
     //Insert One Furniture
     @PutMapping("/{user_uuid}/insert_one")
     public R insertOneFurniture(@PathVariable("user_uuid") String userUUId,
@@ -40,6 +41,7 @@ public class FurnitureController {
         return furnitureService.insertOneFurniture(furniture);
     }
 
+    //-----------------------------------------UPDATE---------------------------------------
     //Update One Furniture
     @PatchMapping("/{user_uuid}/update_one")
     public R updateOneFurniture(@PathVariable(name = "user_uuid") String userUUId,
@@ -50,6 +52,7 @@ public class FurnitureController {
         return furnitureService.updateOneFurniture(furniture);
     }
 
+    //-----------------------------------------DELETE---------------------------------------
     //Delete One User's Furniture, need furnitureUUId
     @DeleteMapping("/{user_uuid}/delete_one")
     public R deleteOneFurnitureByFurnitureUUId(@PathVariable(name = "user_uuid") String userUUId,
@@ -60,6 +63,7 @@ public class FurnitureController {
         return furnitureService.deleteOneFurnitureByFurnitureUUId(furnitureUUId);
     }
 
+    //-----------------------------------------SEARCH---------------------------------------
     //Find One User's Some Furniture, need userUUId, lastSeenFurnitureId & searchSize
     @GetMapping("/{user_uuid}/search_list")
     public R searchFurnitureListByUserUUId(@PathVariable(name = "user_uuid") String userUUId,

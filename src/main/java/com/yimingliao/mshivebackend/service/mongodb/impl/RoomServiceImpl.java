@@ -75,14 +75,13 @@ public class RoomServiceImpl implements IRoomService {
                 .set("img_url", room.getImgUrl())
                 .set("description", room.getDescription())
                 .set("is_bookmarks", room.getIsBookmarks())
-                .set("ref_user_id", room.getRefUserId())
-                .set("modify_time", new Date().toString())
-                .set("modify_count", room.getModifyCount() + 1)
+                .set("ref_user_id", room.getRefUserId())//对所属User的索引
+                .set("modify_time", new Date().toString())//处理时间：后端插入时间
+                .set("modify_count", room.getModifyCount() + 1)//处理修改次数：+1
                 .set("is_deleted", false);
         //保存新增的房间
         log.info("updateOneRoom: " + update);
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, Room.class);
-        long modifiedCount = updateResult.getModifiedCount();
         //判定是否保存成功
         if (updateResult.getModifiedCount() == 0) {
             return R.error(404, "Update Failed", new Date(), room.getId());
@@ -101,6 +100,7 @@ public class RoomServiceImpl implements IRoomService {
 
     //----------------------------------SEARCH----------------------------------
     //Find One User's Some Rooms, need userUUId, lastSeenRoomId & searchSize
+    // TODO 按着FurnitureServiceImpl.java 来把这个接口统一规范
     @Override
     public R searchRoomListByUserUUId(String userUUId, Long lastSeenRoomId, Integer searchSize) {
         Query query = new Query();
@@ -147,7 +147,7 @@ public class RoomServiceImpl implements IRoomService {
         return R.success(200, "Search Success", new Date(), roomList);
     }
 
-    //Search RoomList By RoomUUId List
+    //Search RoomList By RoomUUId List***EXTRA***
     @Override
     public R searchRoomListByRoomUUIdList(List<String> roomUUIds) {
         List<Room> roomListResult = new ArrayList<>();
@@ -163,6 +163,7 @@ public class RoomServiceImpl implements IRoomService {
         return R.success(200, "Search Success", new Date(), roomListResult);
     }
 
+    //----------------------------------DOWNLOAD----------------------------------
     //Download One User's Optional Room Report
     @Override
     public ResponseEntity downloadOneUserRoomReportForm(String userUUId, String startDate,

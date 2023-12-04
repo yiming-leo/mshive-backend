@@ -31,7 +31,7 @@ public class FurnitureServiceTest {
         furniture.setDescription("无");
         furniture.setIsBookmarks(false);
         furniture.setIsDeleted(false);
-        furniture.setModifyTime(new DateTime().toLocalDateTime());
+        furniture.setModifyTime(String.valueOf(new DateTime().toLocalDateTime()));
         furniture.setModifyCount(1);
         System.out.println(furnitureService.insertOneFurniture(furniture));
     }

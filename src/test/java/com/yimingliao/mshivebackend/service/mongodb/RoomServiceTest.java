@@ -42,7 +42,7 @@ public class RoomServiceTest {
         room.setDescription("无");
         room.setIsBookmarks(false);
         room.setIsDeleted(false);
-        room.setModifyTime(new DateTime().toLocalDateTime());
+        room.setModifyTime(String.valueOf(new DateTime().toLocalDateTime()));
         room.setModifyCount(1);
         //保存新增的房间
         Room saveRoom = roomRepository.save(room);
@@ -68,7 +68,7 @@ public class RoomServiceTest {
             room.setDescription("无内容");
             room.setIsBookmarks(true);
             room.setIsDeleted(true);
-            room.setModifyTime(new DateTime().toLocalDateTime());
+            room.setModifyTime(String.valueOf(new DateTime().toLocalDateTime()));
             room.setModifyCount(1);
             //保存新增的房间
             Room saveRoom = roomRepository.save(room);

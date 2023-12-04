@@ -42,6 +42,7 @@ public class StuffServiceImpl implements IStuffService {
     @Autowired
     private ReportFormWriter reportFormWriter;
 
+    //----------------------------------INSERT----------------------------------
     //Insert One Stuff
     @Override
     public R insertOneStuff(Stuff stuff) {
@@ -59,7 +60,9 @@ public class StuffServiceImpl implements IStuffService {
         return R.success(200, "Insert Success", new Date());
     }
 
+    //----------------------------------UPDATE----------------------------------
     //Update One Stuff
+    // TODO 按着FurnitureServiceImpl.java 来把这个接口统一规范
     @Override
     public R updateOneStuff(Stuff stuff) {
         //新建query
@@ -89,15 +92,18 @@ public class StuffServiceImpl implements IStuffService {
         return R.success(200, "Update Success", new Date(), modifiedCount);
     }
 
+    //----------------------------------DELETE----------------------------------
     //Delete One User's Stuff, need stuffUUId
     @Override
     public R deleteOneStuffByStuffUUId(String stuffUUId) {
         stuffRepository.deleteById(stuffUUId);
-        log.info("deleteOneStuffByStuffUUId success");
-        return R.success(200, "Delete Success", new Date());
+        log.info("deleteOneStuffByStuffUUId success" + stuffUUId);
+        return R.success(200, "Delete Success", new Date(), stuffUUId);
     }
 
+    //----------------------------------SEARCH----------------------------------
     //Find One User's Some Stuff, need lastSeenStuffId & searchSize
+    // TODO 按着FurnitureServiceImpl.java 来把这个接口统一规范
     @Override
     public R searchStuffListByUserUUId(String userUUId, Long lastSeenStuffId, Integer searchSize) {
         Query query = new Query();
@@ -144,6 +150,7 @@ public class StuffServiceImpl implements IStuffService {
         return R.success(200, "Search Success", new Date(), stuffList);
     }
 
+    //----------------------------------DOWNLOAD----------------------------------
     //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
     @Override
     public ResponseEntity downloadOneUserStuffReportForm(String userUUId, String startDate,

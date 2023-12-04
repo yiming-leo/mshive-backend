@@ -35,7 +35,7 @@ public class OTPController {
         String remoteAddr = request.getRemoteAddr();
         log.info("Connect to: " + remoteAddr);
         try {
-            return otpCodeService.OTPCodeSenderByDynamicHtmlEmail(remoteAddr, length, duration, from, to, htmlFilePath);
+            return otpCodeService.OTPCodeSenderByDynamicHtmlEmail(length, duration, from, to, htmlFilePath);
         } catch (Exception e) {
             //防止Redis项目没启动所以Try
             log.error(e.getMessage());
@@ -44,11 +44,11 @@ public class OTPController {
     }
 
     @GetMapping("/validate_email")
-    public R validateOTPCodeByEmail(HttpServletRequest request, @RequestParam(name = "otp_code") String otp) {
+    public R validateOTPCodeByEmail(HttpServletRequest request, @RequestParam(name = "email_addr") String emailAddr, @RequestParam(name = "otp_code") String otp) {
         String remoteAddr = request.getRemoteAddr();
         log.info("Connect to: " + remoteAddr);
         try {
-            return otpCodeService.OTPCodeValidate(remoteAddr, otp);
+            return otpCodeService.OTPCodeValidate(emailAddr, otp);
         } catch (Exception e) {
             //防止Redis项目没启动所以Try
             log.error(e.getMessage());

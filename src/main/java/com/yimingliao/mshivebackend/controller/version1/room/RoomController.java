@@ -47,7 +47,7 @@ public class RoomController {
     @PatchMapping("/{user_uuid}/update_one")
     public R updateOneRoom(@PathVariable("user_uuid") String userUUId, @RequestBody Room room) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
-            return R.error(403, "Insert Forbidden", new Date(), "无权限新增");
+            return R.error(403, "Update Forbidden", new Date(), "无权限更新");
         }
         return roomService.updateOneRoom(room);
     }
@@ -58,7 +58,7 @@ public class RoomController {
     public R deleteOneRoomByRoomUUId(@PathVariable("user_uuid") String userUUId,
                                      @RequestParam(name = "room_uuid") String roomUUId) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
-            return R.error(403, "Insert Forbidden", new Date(), "无权限新增");
+            return R.error(403, "Delete Forbidden", new Date(), "无权限删除");
         }
         return roomService.deleteOneRoomByRoomUUId(roomUUId);
     }
@@ -67,10 +67,10 @@ public class RoomController {
     //Find One User's Some Rooms, need userUUId, lastSeenRoomId & searchSize
     @GetMapping("/{user_uuid}/search_list")
     public R searchRoomListByUserUUId(@PathVariable("user_uuid") String userUUId,
-                                      @RequestParam(name = "last_seen_roomId") Long lastSeenRoomId,
+                                      @RequestParam(name = "last_seen_room_id") Long lastSeenRoomId,
                                       @RequestParam(name = "search_size") Integer searchSize) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
-            return R.error(403, "Insert Forbidden", new Date(), "无权限新增");
+            return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
         }
         return roomService.searchRoomListByUserUUId(userUUId, lastSeenRoomId, searchSize);
     }
@@ -79,7 +79,7 @@ public class RoomController {
     @GetMapping("/{user_uuid}/search_all")
     public R searchRoomAllByUserUUId(@PathVariable("user_uuid") String userUUId) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
-            return R.error(403, "Insert Forbidden", new Date(), "无权限新增");
+            return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
         }
         return roomService.searchRoomAllByUserUUId(userUUId);
     }

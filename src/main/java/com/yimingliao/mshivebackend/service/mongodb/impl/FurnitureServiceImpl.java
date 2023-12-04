@@ -40,6 +40,7 @@ public class FurnitureServiceImpl implements IFurnitureService {
     @Autowired
     private ReportFormWriter reportFormWriter;
 
+    //----------------------------------INSERT----------------------------------
     //Insert One Furniture
     @Override
     public R insertOneFurniture(Furniture furniture) {
@@ -57,6 +58,7 @@ public class FurnitureServiceImpl implements IFurnitureService {
         return R.success(200, "Insert Success", new Date());
     }
 
+    //----------------------------------UPDATE----------------------------------
     //Update One Furniture
     @Override
     public R updateOneFurniture(Furniture furniture) {
@@ -87,6 +89,7 @@ public class FurnitureServiceImpl implements IFurnitureService {
         return R.success(200, "Update Success", new Date(), modifiedCount);
     }
 
+    //----------------------------------DELETE----------------------------------
     //Delete One User's Furniture, need furnitureUUId
     @Override
     public R deleteOneFurnitureByFurnitureUUId(String furnitureUUId) {
@@ -95,6 +98,7 @@ public class FurnitureServiceImpl implements IFurnitureService {
         return R.success(200, "Delete Success", new Date());
     }
 
+    //----------------------------------SEARCH----------------------------------
     //Find One User's Some Furniture, need lastSeenFurnitureId & searchSize
     @Override
     public R searchFurnitureListByUserUUId(String userUUId, Long lastSeenFurnitureId, Integer searchSize) {
@@ -142,11 +146,12 @@ public class FurnitureServiceImpl implements IFurnitureService {
         return R.success(200, "Search Success", new Date(), furnitureList);
     }
 
+    //----------------------------------DOWNLOAD----------------------------------
     //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
     @Override
     public ResponseEntity downloadOneUserFurnitureReportForm(String userUUId, String startDate,
-                                                String endDate, Boolean onlyBookmarks,
-                                                Boolean needAll) throws IOException {
+                                                             String endDate, Boolean onlyBookmarks,
+                                                             Boolean needAll) throws IOException {
         //查询条件
         Query query = new Query();
         query.addCriteria(Criteria.where("ref_user_id").is(userUUId));
