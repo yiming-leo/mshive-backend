@@ -100,7 +100,6 @@ public class RoomServiceImpl implements IRoomService {
 
     //----------------------------------SEARCH----------------------------------
     //Find One User's Some Rooms, need userUUId, lastSeenRoomId & searchSize
-    // TODO 按着FurnitureServiceImpl.java 来把这个接口统一规范
     @Override
     public R searchRoomListByUserUUId(String userUUId, Long lastSeenRoomId, Integer searchSize) {
         Query query = new Query();
