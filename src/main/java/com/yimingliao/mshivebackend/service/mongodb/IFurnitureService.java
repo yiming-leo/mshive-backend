@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Calendo
@@ -32,6 +33,9 @@ public interface IFurnitureService {
 
     //Find One User's One Furniture, need userUUId & furnitureId
     R searchOneFurnitureByUserUUId(String userUUId, Long furnitureId);
+
+    //Search FurnitureList By FurnitureUUId List***EXTRA***
+    R searchFurnitureListByFurnitureUUIdList(List<String> furnitureUUIds);
 
     //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
     ResponseEntity downloadOneUserFurnitureReportForm(String userUUId, String startDate,

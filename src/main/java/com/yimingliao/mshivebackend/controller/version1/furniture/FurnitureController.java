@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Calendo
@@ -92,6 +93,16 @@ public class FurnitureController {
             return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
         }
         return furnitureService.searchOneFurnitureByUserUUId(userUUId, furnitureId);
+    }
+
+    //Find One User's One Furniture, need userUUId & furnitureId
+    @PostMapping("/{user_uuid}/search_furniture_list_by_furniture_uuids")
+    public R searchFurnitureByFurnitureUUId(@PathVariable("user_uuid") String userUUId,
+                                  @RequestBody List<String> furnitureUUIds) {
+        if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
+            return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
+        }
+        return furnitureService.searchFurnitureListByFurnitureUUIdList(furnitureUUIds);
     }
 
     //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm

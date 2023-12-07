@@ -65,6 +65,7 @@ public class StuffServiceImpl implements IStuffService {
     // TODO 按着FurnitureServiceImpl.java 来把这个接口统一规范
     @Override
     public R updateOneStuff(Stuff stuff) {
+        System.out.println("stuff: " + stuff);
         //新建query
         Query query = new Query();
         //根据uuid查找stuff，这里where随便是id还是_id都可以，但是前端返回来的JSON必须和后端的Entity类相符合！
@@ -80,6 +81,7 @@ public class StuffServiceImpl implements IStuffService {
                 .set("modifyTime", new Date().toString())//处理时间：后端插入时间
                 .set("modifyCount", stuff.getModifyCount() + 1)//处理修改次数：+1
                 .set("refUserId", stuff.getRefUserId())
+                .set("refFurnitureId", stuff.getRefFurnitureId())
                 .set("refRoomId", stuff.getRefRoomId());//多了refRoomId可变基
         //保存新增的物品
         log.info("updateOneStuff: " + update);

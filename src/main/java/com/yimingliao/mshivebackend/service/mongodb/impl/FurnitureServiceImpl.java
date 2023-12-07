@@ -4,6 +4,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.yimingliao.mshivebackend.common.R;
 import com.yimingliao.mshivebackend.dto.FurnitureScrollListDTO;
 import com.yimingliao.mshivebackend.entity.mongodb.Furniture;
+import com.yimingliao.mshivebackend.entity.mongodb.Room;
 import com.yimingliao.mshivebackend.entity.report.FurnitureReportForm;
 import com.yimingliao.mshivebackend.mapper.mongodb.FurnitureRepository;
 import com.yimingliao.mshivebackend.service.mongodb.IFurnitureService;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -144,6 +146,23 @@ public class FurnitureServiceImpl implements IFurnitureService {
             return R.error(404, "Search Failed", new Date());
         }
         return R.success(200, "Search Success", new Date(), furnitureList);
+    }
+
+    //Search FurnitureList By FurnitureUUId List***EXTRA***
+    @Override
+    public R searchFurnitureListByFurnitureUUIdList(List<String> furnitureUUIds) {
+        List<Furniture> furnitureListResult = new ArrayList<>();
+        for (String furnitureUUId : furnitureUUIds) {
+            Query query = new Query();
+            query.addCriteria(Criteria.where("id").is(furnitureUUId));
+            List<Furniture> furnitureList = mongoTemplate.find(query, Furniture.class);
+            if (furnitureList.isEmpty()) {
+                return R.error(404, "Search Failed", new Date());
+            }
+            furnitureListResult.add(furnitureList.get(0));
+        }
+        System.out.println(furnitureListResult);
+        return R.success(200, "Search Success", new Date(), furnitureListResult);
     }
 
     //----------------------------------DOWNLOAD----------------------------------

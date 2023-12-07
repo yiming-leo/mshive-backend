@@ -62,6 +62,7 @@ public class BookmarkTreeUtil {
                 childTree.add(buildChildTree(treeNode));
             }
         }
+
         // for循环结束，即节点下没有任何节点，树形构建结束，设置树结果
         pNode.setChildren(childTree);
         return pNode;
