@@ -105,6 +105,8 @@ public class FurnitureController {
         return furnitureService.searchFurnitureListByFurnitureUUIdList(furnitureUUIds);
     }
 
+    // TODO Find One User's One Furniture, need userUUId & furnitureUUId
+
     //Download One User's Optional Rom Report Form, need userUUId & JSON:RoomReportForm
     @PostMapping("/{user_uuid}/download_report_form")
     public ResponseEntity downloadOneUserRoomReportForm(@PathVariable("user_uuid") String userUUId,

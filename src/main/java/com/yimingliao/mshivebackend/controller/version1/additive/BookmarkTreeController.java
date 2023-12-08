@@ -63,19 +63,19 @@ public class BookmarkTreeController {
                     room.getMainColor(), room.getMinorColor(), room.getIsBookmarks(),
                     room.getAttribute(), room.getImgUrl(), room.getRefUserId()));
         }
-        //furniture系列装载
+        //furniture系列装载，将getRefRoomId作为父ID
         List<Furniture> furnitureList = (List<Furniture>) furnitureService.searchFurnitureAllByUserUUId(userUUId).getData();
         for (Furniture furniture : furnitureList) {
             treeNodeList.add(new BookmarkTreeVO(furniture.getName(), furniture.getId(),
                     furniture.getMainColor(), furniture.getMinorColor(), furniture.getIsBookmarks(),
                     furniture.getAttribute(), furniture.getImgUrl(), furniture.getRefRoomId()));
         }
-        //stuff系列装载
+        //stuff系列装载，将getRefFurnitureId作为父ID
         List<Stuff> stuffList = (List<Stuff>) stuffService.searchStuffAllByUserUUId(userUUId).getData();
         for (Stuff stuff : stuffList) {
             treeNodeList.add(new BookmarkTreeVO(stuff.getName(), stuff.getId(),
                     stuff.getMainColor(), stuff.getMinorColor(), stuff.getIsBookmarks(),
-                    stuff.getAttribute(), stuff.getImgUrl(), stuff.getRefRoomId()));
+                    stuff.getAttribute(), stuff.getImgUrl(), stuff.getRefFurnitureId()));
         }
         // 创建树形结构（数据集合作为参数）
         BookmarkTreeUtil treeBuild = new BookmarkTreeUtil(treeNodeList);

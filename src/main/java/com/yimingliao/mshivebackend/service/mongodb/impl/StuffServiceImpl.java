@@ -62,7 +62,6 @@ public class StuffServiceImpl implements IStuffService {
 
     //----------------------------------UPDATE----------------------------------
     //Update One Stuff
-    // TODO 按着FurnitureServiceImpl.java 来把这个接口统一规范
     @Override
     public R updateOneStuff(Stuff stuff) {
         System.out.println("stuff: " + stuff);

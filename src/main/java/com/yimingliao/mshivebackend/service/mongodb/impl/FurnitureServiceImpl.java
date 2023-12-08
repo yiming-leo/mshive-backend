@@ -148,6 +148,8 @@ public class FurnitureServiceImpl implements IFurnitureService {
         return R.success(200, "Search Success", new Date(), furnitureList);
     }
 
+    // TODO Find One User's One Furniture, need userUUId & furnitureUUId
+
     //Search FurnitureList By FurnitureUUId List***EXTRA***
     @Override
     public R searchFurnitureListByFurnitureUUIdList(List<String> furnitureUUIds) {
