@@ -31,7 +31,8 @@ jobs:
       - name: Locate Current Directory & User
         run: |
           pwd
-          ll -a
+          ls
+#          ll -a
 
 #      - name: SCP Jar to Server
 #        uses: appleboy/scp-action@master
