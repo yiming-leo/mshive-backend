@@ -36,6 +36,9 @@ jobs:
           ls
           pwd
           find -name "target"
+          cd runner
+          ls
+          pwd
 #          ll -a
 
 #      - name: SCP Jar to Server
