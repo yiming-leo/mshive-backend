@@ -30,6 +30,7 @@ jobs:
     steps:
       - name: Locate Current Directory & User
         run: |
+          set -x
           whoami
           ls
           find -name "target"
