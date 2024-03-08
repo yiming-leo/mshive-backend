@@ -30,9 +30,9 @@ jobs:
     steps:
       - name: Locate Current Directory & User
         run: |
-          cd ../
-          pwd
+          whoami
           ls
+          find -name "target"
 #          ll -a
 
 #      - name: SCP Jar to Server
