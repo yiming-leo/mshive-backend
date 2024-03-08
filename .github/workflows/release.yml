@@ -30,7 +30,6 @@ jobs:
     steps:
       - name: Locate Current Directory & User
         run: |
-          ls -l target/
           pwd
           ll -a
 
