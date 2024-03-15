@@ -36,6 +36,10 @@ jobs:
         with:
           source: "target/*.jar"
           target: "/mydata/project_file"
+          host: "${{ secrets.SERVER_HOST }}"
+          port: "22"
+          username: "${{ secrets.SERVER_USERNAME }}"
+          key: "${{ secrets.SSH_PRIVATE_KEY }}" # 确保这里的key引用的是您存于Secrets中的SSH私钥
 
   run:
     name: Run Jar on Server
