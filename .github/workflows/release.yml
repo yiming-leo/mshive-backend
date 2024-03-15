@@ -100,5 +100,10 @@ jobs:
             # jack in Dockerfile directory
             cd /mydata/project_file/mshive_backend
             
+            # stop && delete former docker container && image
+            docker stop mshive-backend
+            docker rm mshive-backend
+            docker rmi mshive-backend
+            
             # use current directory's Dockerfile to build image
             docker build -t mshive-backend .
