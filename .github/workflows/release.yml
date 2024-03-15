@@ -25,6 +25,7 @@ jobs:
 
   deploy:
     name: Deploy to Server
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Copy JAR file to Server
