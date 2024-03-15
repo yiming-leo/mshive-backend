@@ -11,8 +11,4 @@ COPY ./mshive-backend.jar /app/mshive-backend.jar
 EXPOSE 8080
 
 # 在容器启动时运行的命令
-CMD echo "Stopping old Docker container if it exists..." \
-    && docker stop mshive-backend || true \
-    && docker rm mshive-backend || true \
-    && echo "Running new Docker container..." \
-    && docker run -d -p 8080:8080 --name mshive-backend mshive-backend
+CMD ["java", "-jar", "mshive-backend.jar"]
