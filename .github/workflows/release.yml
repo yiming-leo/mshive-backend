@@ -10,9 +10,10 @@ jobs:
     name: Build with Maven
     runs-on: ubuntu-latest
     steps:
+      #---------receive artifact to current job-------
       - name: Checkout Repository
         uses: actions/checkout@v3
-
+      #---------set up maven and maven package-------
       - name: Set up JDK & Maven
         uses: actions/setup-java@v3
         with:
@@ -22,7 +23,7 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B package
-
+      #---------upload artifact to other job-------
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -34,6 +35,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      #---------receive artifact to current job-------
       - name: Checkout Repository
         uses: actions/checkout@v3
 
@@ -42,60 +44,55 @@ jobs:
         with:
           name: packaged-jars
           path: target
-
+      #---------(use ssh) copy artifact to private server-------
       - name: Copy JAR file to Server
         uses: appleboy/scp-action@master
-        env:
-          HOST: ${{ secrets.SERVER_HOST }}
-          USERNAME: ${{ secrets.SERVER_USERNAME }}
-          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+#        env:
+#          HOST: ${{ secrets.SERVER_HOST }}
+#          USERNAME: ${{ secrets.SERVER_USERNAME }}
+#          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         with:
-          source: "target/*.jar"
-          target: "/mydata/project_file"
+          source: "target/mshive-backend-0.0.1-SNAPSHOT.jar, ./Dockerfile"
+          target: "/mydata/project_file/mshive_backend"
           host: ${{ secrets.SERVER_HOST }}
           port: 22
           username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }} # 确保这里的key引用的是您存于Secrets中的SSH私钥
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-  run:
-    name: Run Jar on Server
+#  run:
+#    name: Run Jar on Server
+#    needs: deploy
+#    runs-on: ubuntu-latest
+#    steps:
+#      #---------use ssh login to private server-------
+#      - name: SSH into Server and Run Jar
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.SERVER_HOST }}
+#          username: ${{ secrets.SERVER_USERNAME }}
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          script: |
+#            cd /mydata/project_file/
+#            ls && pwd && whoami
+##            java -jar mshive-backend-0.0.1-SNAPSHOT.jar
+
+  dockerize:
+    name: Build and Run Docker image
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: SSH into Server and Run Jar
+      #---------(use ssh) docker build & run-------
+      - name: SSH and Docker Build & Run
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /mydata/project_file/
-            ls && pwd && whoami
-#            java -jar mshive-backend-0.0.1-SNAPSHOT.jar
-
-#  deploy:
-#    name: Deploy to Server
-#    needs: build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Locate Current Directory & User
-#        run: |
-#          id
-#          set -x
-#          whoami
-#          ls
-#          pwd
-#          find -name "target"
-#          ls
-#          pwd
-#          ll -a
-
-#      - name: SCP Jar to Server
-#        uses: appleboy/scp-action@master
-#        with:
-#          host: ${{ secrets.SERVER_HOST }}
-#          username: lym
-#          key: ${{ secrets.SERVER_SSH_KEY }}
-#          port: ${{ secrets.SERVER_PORT }}
-#          source: target/mshive-backend-0.0.1-SNAPSHOT.jar
-#          target: /mydata/project_file/mshive-backend-0.0.1-SNAPSHOT.jar
+            echo "Building Docker image..."
+            
+            # jack in Dockerfile directory
+            cd /mydata/project_file/mshive_backend/target
+            
+            # use current directory's Dockerfile to build image
+            docker build -t mshive-backend .
