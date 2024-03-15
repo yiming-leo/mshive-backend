@@ -45,7 +45,7 @@ jobs:
           name: packaged-jars
           path: target
       #---------(use ssh) rm -rf mshive-backend dir-------
-      - name: SSH and Docker Build & Run
+      - name: SSH and Remove mshive-backend Dir
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -69,6 +69,18 @@ jobs:
           port: 22
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #---------(use ssh) transfer mshive-backend.jar to ../ and rm -rf target dir-------
+      - name: SSH and Transfer mshive-backend.jar to mshive-backend/ and Remove target
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "transfer .jar and remove target"
+            cd /mydata/project_file/mshive_backend
+            mv target/* ./
+            rm -rf target
 
 #  run:
 #    name: Run Jar on Server
