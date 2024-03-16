@@ -15,3 +15,6 @@ EXPOSE 8080
 
 # 在容器启动时运行的命令
 CMD ["java", "-jar", "mshive-backend.jar"]
+
+# 输出一句已运行
+RUN echo "mshive-backend.jar is working"

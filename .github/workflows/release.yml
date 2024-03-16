@@ -107,3 +107,6 @@ jobs:
             
             # use current directory's Dockerfile to build image
             docker build -t mshive-backend .
+            
+            # run project 
+            docker run -d -p 8080:8080 --name mshive-backend mshive-backend
