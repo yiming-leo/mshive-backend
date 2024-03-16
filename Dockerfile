@@ -4,6 +4,9 @@ LABEL maintainer="yimingleo@outlook.com"
 
 WORKDIR /app
 
+# 输出一句已运行
+RUN echo "Dockerfile is working"
+
 # 将 jar 文件复制到容器内
 COPY ./mshive-backend.jar /app/mshive-backend.jar
 

@@ -58,10 +58,6 @@ jobs:
       #---------(use ssh) copy artifact to private server-------
       - name: Copy JAR file to Server
         uses: appleboy/scp-action@master
-#        env:
-#          HOST: ${{ secrets.SERVER_HOST }}
-#          USERNAME: ${{ secrets.SERVER_USERNAME }}
-#          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         with:
           source: "./target/mshive-backend.jar, ./Dockerfile"
           target: "/mydata/project_file/mshive_backend"
@@ -83,7 +79,7 @@ jobs:
             rm -rf target
 
   dockerize:
-    name: Build and Run Docker image
+    name: Dockerize Archive
     needs: deploy
     runs-on: ubuntu-latest
     steps:
