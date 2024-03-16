@@ -97,9 +97,13 @@ jobs:
             cd /mydata/project_file/mshive_backend
             
             # stop && delete former docker container && image
+            if docker ps -a | grep -q mshive-backend; then
             docker stop mshive-backend
             docker rm mshive-backend
+            fi
+            if docker images | grep -q mshive-backend; then
             docker rmi mshive-backend
+            fi
             
             # use current directory's Dockerfile to build image
             docker build -t mshive-backend .
