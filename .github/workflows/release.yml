@@ -53,7 +53,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "rm -rf old target files..."
-            cd /mydata/project_file
+            cd /project_file
             rm -rf mshive_backend
       #---------(use ssh) copy artifact to private server-------
       - name: Copy JAR file to Server
@@ -74,7 +74,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "transfer .jar and remove target"
-            cd /mydata/project_file/mshive_backend
+            cd /project_file/mshive_backend
             mv target/* ./
             rm -rf target
 
@@ -94,7 +94,7 @@ jobs:
             echo "Building Docker image..."
             
             # jack in Dockerfile directory
-            cd /mydata/project_file/mshive_backend
+            cd /project_file/mshive_backend
             
             # stop && delete former docker container && image
             if docker ps -a | grep -q mshive-backend; then
