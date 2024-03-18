@@ -13,33 +13,26 @@ spring:
       authentication-database: admin
       authSource: admin
       # 主机地址
-      host: localhost
+      host: 47.102.196.219 #47.102.196.219
       # 数据库
       database: mshive
       # 默认端口是27017
       port: 27017
       # 用子账号
-      username: admin
+      username: root # admin
       # 用子密码
-      password: root
+      password: je102dp20v9 #root
+      # 超时时间
+      socket-timeout: 1000000
+      connection-timeout: 1000000
       # 也可以使用uri连接
 #       uri: mongodb://admin:root@localhost:27017/mshive?authSource=admin&authentication-database=admin
-  datasource:
-    # 数据库驱动：
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    # 数据源名称，地址，账号，密码
-    name: defaultDataSource
-    url: jdbc:mysql://localhost:3306/blue?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useUnicode=true&useSSL=false
-    username: root
-    password: root
-    # 连接池类型
-    type: com.alibaba.druid.pool.DruidDataSource
   # java mail 避免邮件发送工具类写错MailSender，会和JavaMail包里的重名，从而冲突
   mail:
     host: smtp.qq.com
     protocol: smtps
-    username: 987654321@qq.com
-    password: ndqpxqduiqpc
+    username: 2479711422@qq.com
+    password: bgtzfvukfwaxecaf
     port: 465
     properties:
       mail:
@@ -54,9 +47,9 @@ spring:
             fallback: false
   # redis相关
   redis:
-    host: localhost
+    host: 47.102.196.219
     port: 6379
-    password: root
+    password:
     database: 0
     lettuce:
       pool:
@@ -65,32 +58,15 @@ spring:
         min-idle: 1
         time-between-eviction-runs: 10s
   # elasticsearch related
-#   elasticsearch:
-#     username: my-username
-#     password: my-password
-    # es url
-#     uris: http://serverurl:9200
-    # connection timeout, default: 1s
-#     connection-timeout: 10s
-    # data reading timeout, default: 30s
-#     socket-timeout: 30s
-# 下面这些内容是为了让MyBatis映射
-# 指定Mybatis的Mapper文件
-mybatis:
-  mapper-locations: classpath:mappers/*xml
-  # 指定Mybatis的实体目录
-  type-aliases-package: com.yimingliao.mshivebackend.entity
-# mybatis-plus配置
-mybatis-plus:
-  # 别名扫描包
-  type-aliases-package: com.yimingliao.entity
-  configuration:
-    # 在映射实体或属性时，将数据表名与字段名的下划线去掉，按照驼峰命名
-    map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    db-config:
-      id-type: ASSIGN_ID
+  elasticsearch:
+#    username: root
+#    password: root
+#     es url
+    uris: http://47.102.196.219:9200
+#    connection timeout, default: 1s
+    connection-timeout: 10s
+#    data reading timeout, default: 30s
+    socket-timeout: 30s
 # 输出日志等级
 logging:
 # 	# 分组
