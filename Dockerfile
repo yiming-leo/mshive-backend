@@ -12,7 +12,7 @@ COPY ./mshive-backend.jar /app/mshive-backend.jar
 
 # 暴露容器的端口号（假设你的应用使用8080端口）
 EXPOSE 8081
-
+#Entrypoint
 # 在容器启动时运行的命令
 CMD ["java", "-jar", "mshive-backend.jar"]
 

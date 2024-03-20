@@ -1,0 +1,112 @@
+name: Release to Aliyun
+
+on:
+  push:
+    branches:
+      - release_aliyun
+
+jobs:
+  build:
+    name: Build with Maven
+    runs-on: ubuntu-latest
+    steps:
+      #---------receive artifact to current job-------
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      #---------set up maven and maven package-------
+      - name: Set up JDK & Maven
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn -B package
+      #---------upload artifact to other job-------
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: packaged-jars
+          path: target/*.jar
+
+  deploy:
+    name: Deploy to Server
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      #---------receive artifact to current job-------
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: packaged-jars
+          path: target
+      #---------(use ssh) rm -rf mshive-backend dir-------
+      - name: SSH and Remove mshive-backend Dir
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "rm -rf old target files..."
+            cd ~/project_file
+            rm -rf mshive_backend
+      #---------(use ssh) copy artifact to private server-------
+      - name: Copy JAR file to Server
+        uses: appleboy/scp-action@master
+        with:
+          source: "./target/mshive-backend.jar, ./Dockerfile"
+          target: "~/project_file/mshive_backend"
+          host: ${{ secrets.SERVER_HOST }}
+          port: 22
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #---------(use ssh) transfer mshive-backend.jar to ../ and rm -rf target dir-------
+      - name: SSH and Transfer mshive-backend.jar to mshive-backend/ and Remove target
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "transfer .jar and remove target"
+            cd ~/project_file/mshive_backend
+            mv target/* ./
+            rm -rf target
+
+  dockerize:
+    name: Dockerize Archive
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      #---------(use ssh) docker build & run-------
+      - name: SSH and Docker Build & Run
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Building Docker image..."
+            
+            # jack in Dockerfile directory
+            cd ~/project_file/mshive_backend
+            
+            # stop && delete former docker container && image
+            if docker ps -a | grep -q mshive-backend; then
+            docker stop mshive-backend
+            docker rm mshive-backend
+            fi
+            if docker images | grep -q mshive-backend; then
+            docker rmi mshive-backend
+            fi
+            
+            # use current directory's Dockerfile to build image
+            docker build -t mshive-backend .
+            
+            # run project 
+            docker run -d -p 8081:8081 --name mshive-backend mshive-backend
