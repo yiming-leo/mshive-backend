@@ -1,4 +1,4 @@
-name: Release to Aliyun
+name: Release On Aliyun
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     name: Build with Maven
     runs-on: ubuntu-latest
     steps:
-      #---------receive artifact to current job-------
+      #---------check out-------
       - name: Checkout Repository
         uses: actions/checkout@v3
       #---------set up maven and maven package-------
