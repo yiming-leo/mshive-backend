@@ -109,4 +109,4 @@ jobs:
             docker build -t mshive-backend .
             
             # run project 
-            docker run -d -p 8081:8081 --name mshive-backen --network mshive_proxy mshive-backend
+            docker run -d -p 8081:8081 --name mshive-backend --network mshive_proxy mshive-backend
