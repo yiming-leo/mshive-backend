@@ -76,7 +76,7 @@ public class RoomController {
     }
 
     //Find One User's All Rooms
-    @GetMapping("/mshive-backend/{user_uuid}/search_all")
+    @GetMapping("/{user_uuid}/search_all")
     public R searchRoomAllByUserUUId(@PathVariable("user_uuid") String userUUId) {
         if (userService.searchOneUserByUserUUId(userUUId).getStatus() != 200) {
             return R.error(403, "Search Forbidden", new Date(), "无权限搜索");
