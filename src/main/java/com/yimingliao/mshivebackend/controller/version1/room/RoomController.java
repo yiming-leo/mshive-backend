@@ -22,7 +22,7 @@ import java.util.List;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/mshive-backend/v1/room")
+@RequestMapping("/v1/room")
 @Slf4j
 public class RoomController {
 
